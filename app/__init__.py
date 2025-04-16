@@ -1,11 +1,11 @@
-from flask import Flask, render_template
+from flask import Flask
+from flask_cors import CORS
 from .config import Config
-from .extensions import db, jwt
+from .extensions import db, jwt, socketio, cors
 from .auth.routes import auth_bp
 from .summarization.routes import summarization_bp
 from .chatbot.routes import chatbot_bp
 from .messaging import events  # register socket events
-from .extensions import socketio, cors
 from .translation_tts.routes import translate_bp
 from .forum.routes import forum_bp
 from .tracker.routes import tracker_bp
@@ -17,12 +17,14 @@ load_dotenv()
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
-
+    
     # Initialize extensions
     db.init_app(app)
     jwt.init_app(app)
     socketio.init_app(app)
-    cors.init_app(app, resources={r"/api/*": {"origins": "*"}}, supports_credentials=True)
+    cors.init_app(app, resources={r"/api/*": {"origins": ["http://localhost:5000"]}},
+              supports_credentials=True,
+              expose_headers=["Authorization"])
 
     # Register blueprints
     app.register_blueprint(auth_bp, url_prefix='/api/auth')

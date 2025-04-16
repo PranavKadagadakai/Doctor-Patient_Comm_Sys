@@ -52,8 +52,11 @@ class ChatBot:
 
     def get_response(self, user_input):
         try:
+            print(f"[Bot] Incoming: {user_input} ({type(user_input)})")
+            
             if not isinstance(user_input, str):
                 user_input = str(user_input)
+                
             # Create content with user input
             contents = [
                 types.Content(

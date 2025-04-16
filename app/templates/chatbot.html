@@ -16,7 +16,7 @@
             </div>
         </div>
 
-        <form action="/api/chatbot/chat" method="POST" id="chat-form">
+        <form id="chat-form">
             <div class="input-group">
                 <label for="user-message">Your question:</label>
                 <input type="text" id="user-message" name="message"
@@ -31,84 +31,19 @@
     </div>
 </div>
 
-<style>
-    .chat-container {
-        border-radius: 8px;
-        overflow: hidden;
-        border: 1px solid #e1e4e8;
-    }
-
-    .chat-header {
-        background-color: #f5f7f9;
-        padding: 15px;
-        border-bottom: 1px solid #e1e4e8;
-    }
-
-        .chat-header h3 {
-            margin: 0 0 5px 0;
-            color: #2e86de;
-        }
-
-        .chat-header p {
-            margin: 0;
-            color: #666;
-            font-size: 14px;
-        }
-
-    .chat-messages {
-        padding: 20px;
-        min-height: 200px;
-        max-height: 400px;
-        overflow-y: auto;
-        background-color: white;
-    }
-
-    .system-message {
-        background-color: #e3f2fd;
-        padding: 12px 15px;
-        border-radius: 18px;
-        margin-bottom: 15px;
-        display: inline-block;
-    }
-
-    .input-group {
-        margin-bottom: 10px;
-    }
-
-    #chat-form {
-        padding: 15px;
-        background-color: #f5f7f9;
-        border-top: 1px solid #e1e4e8;
-    }
-
-    label {
-        display: block;
-        margin-bottom: 5px;
-        font-weight: bold;
-    }
-
-    .send-btn {
-        background-color: #2e86de;
-        padding: 10px 20px;
-    }
-
-    .disclaimer {
-        margin-top: 15px;
-        padding: 10px;
-        background-color: #fff3cd;
-        border-left: 4px solid #ffc107;
-        font-size: 14px;
-    }
-</style>
-
 <script>
-    document.getElementById("chat-form").addEventListener("submit", async function (e) {
+    const form = document.getElementById("chat-form");
+    const input = document.getElementById("user-message");
+    const chatHistory = document.getElementById("chat-history");
+    const token = "{{ token | default('') | safe }}";
+
+    form.addEventListener("submit", async function (e) {
         e.preventDefault();
 
-        const message = document.getElementById("user-message").value;
-        const chatHistory = document.getElementById("chat-history");
+        const message = input.value.trim();
+        if (!message) return;
 
-        const token = "{{ token | default('') | safe }}";
+        console.log("Sending message:", message);
         console.log("Token:", token);
 
         try {
@@ -118,28 +53,30 @@
                     "Content-Type": "application/json",
                     "Accept": "application/json",
                     "Authorization": "Bearer " + token
-                },
-                body: JSON.stringify({ message })
+                  },
+                body: JSON.stringify({ message: message })
             });
 
             const result = await response.json();
+            console.log("Response:", result);
 
             if (!response.ok) {
                 chatHistory.innerHTML += `
-                    <div class="error-message">❗ ${result.msg || result.error || 'Something went wrong'}</div>
+                    <div class="error-message">❗ ${result.msg || result.error || 'Unknown error'}</div>
                 `;
                 return;
             }
-            
-            if (result.response) {
-                chatHistory.innerHTML += `
-                    <div class="user-message">${message}</div>
-                    <div class="system-message">${result.response}</div>
-                `;
-            }
-            document.getElementById("user-message").value = "";
+
+            chatHistory.innerHTML += `
+                <div class="user-message">${message}</div>
+                <div class="system-message">${result.response}</div>
+            `;
+            input.value = "";
         } catch (err) {
-            console.error("Request failed:", err);
+            chatHistory.innerHTML += `
+                <div class="error-message">❗ Network or server error</div>
+            `;
+            console.error("Fetch error:", err);
         }
     });
 </script>
