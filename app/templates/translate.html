@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <h2>🌍 Translate + Text-to-Speech</h2>
+  <form action="/api/translate_tts/translate_tts" method="POST">
+    <label>Enter text:</label>
+    <textarea name="text" rows="4" required></textarea>
+
+    <label>Select target language:</label>
+    <select name="target_lang">
+      <option value="es">Spanish (es)</option>
+      <option value="fr">French (fr)</option>
+      <option value="de">German (de)</option>
+      <option value="hi">Hindi (hi)</option>
+    </select>
+
+    <button type="submit">Translate & Speak</button>
+  </form>
+</div>
+{% endblock %}

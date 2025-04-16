@@ -1,9 +1,138 @@
 <!DOCTYPE html>
-<html>
-<head><title>Doctor-Patient System</title></head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Doctor-Patient Communication System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f7f9fa;
+      color: #333;
+    }
+
+    header {
+      background-color: #2e86de;
+      color: white;
+      padding: 1rem 2rem;
+      text-align: center;
+    }
+
+    nav {
+      text-align: center;
+      margin: 1rem 0;
+    }
+
+    nav a {
+      margin: 0 1rem;
+      text-decoration: none;
+      color: #2e86de;
+      font-weight: bold;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 2rem;
+      background-color: #dff9fb;
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+    }
+
+    .features {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .feature {
+      background: white;
+      margin-bottom: 1rem;
+      padding: 1rem;
+      border-left: 5px solid #2e86de;
+    }
+
+    .feature a {
+      display: inline-block;
+      margin-top: 0.5rem;
+      text-decoration: none;
+      color: #2e86de;
+      font-weight: bold;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #888;
+      border-top: 1px solid #ddd;
+    }
+  </style>
+</head>
 <body>
-  <h1>🏥 Doctor-Patient Communication System</h1>
-  <a href="/login">Login</a> |
-  <a href="/register">Register</a>
+
+  <header>
+    <h1>Doctor-Patient Communication System</h1>
+    <p>AI-Powered Healthcare Collaboration Platform</p>
+  </header>
+
+  <nav>
+    <a href="/login">Login</a>
+    <a href="/register">Register</a>
+  </nav>
+
+  <section class="hero">
+    <h1>Empowering Healthcare with AI</h1>
+    <p>Connect. Communicate. Care. Our system bridges patients and doctors using smart tools and secure data-driven interactions.</p>
+  </section>
+
+  <section class="features">
+    <div class="feature">
+      <h3>🧾 Medical Report Summarization</h3>
+      <p>Upload reports in PDF or DOCX and receive AI-generated summaries instantly.</p>
+      <a href="/summarize">Try Summarization</a>
+    </div>
+
+    <div class="feature">
+      <h3>💬 AI Medical Chatbot</h3>
+      <p>Ask health questions and receive instant, intelligent responses.</p>
+      <a href="/chatbot">Chat with AI</a>
+    </div>
+
+    <div class="feature">
+      <h3>🔐 Secure Messaging</h3>
+      <p>Real-time doctor-patient messaging with file sharing support.</p>
+      <a href="/messaging">Go to Messaging</a>
+    </div>
+
+    <div class="feature">
+      <h3>🌍 Translation + Text-to-Speech</h3>
+      <p>Translate messages and listen in multiple languages.</p>
+      <a href="/translate">Translate & Speak</a>
+    </div>
+
+    <div class="feature">
+      <h3>🩺 Doctor Forum</h3>
+      <p>Private space for verified doctors to post and collaborate.</p>
+      <a href="/forum">Visit Doctor Forum</a>
+    </div>
+
+    <div class="feature">
+      <h3>📅 Medical Tracker</h3>
+      <p>Log symptoms, medications, and diagnoses in a timeline.</p>
+      <a href="/tracker">View Medical Tracker</a>
+    </div>
+  </section>
+
+  <footer>
+    &copy; 2025 Doctor-Patient Communication System. All rights reserved.
+  </footer>
+
 </body>
 </html>

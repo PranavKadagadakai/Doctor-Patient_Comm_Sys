@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <h2>📅 Medical Tracker</h2>
+  <form action="/api/tracker/entries" method="POST">
+    <label>Entry Type:</label>
+    <select name="entry_type">
+      <option value="symptom">Symptom</option>
+      <option value="medication">Medication</option>
+      <option value="diagnosis">Diagnosis</option>
+    </select>
+
+    <label>Description:</label>
+    <textarea name="description" required></textarea>
+
+    <label>Date:</label>
+    <input type="date" name="date">
+
+    <button type="submit">Add Entry</button>
+  </form>
+</div>
+{% endblock %}

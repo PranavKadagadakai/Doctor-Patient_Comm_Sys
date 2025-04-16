@@ -2,7 +2,7 @@ from flask import Flask, render_template
 from .config import Config
 from .extensions import db, jwt
 from .auth.routes import auth_bp
-# from .summarization.routes import summarization_bp
+from .summarization.routes import summarization_bp
 from .chatbot.routes import chatbot_bp
 from .messaging import events  # register socket events
 from .extensions import socketio, cors
@@ -26,13 +26,18 @@ def create_app():
 
     # Register blueprints
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
-    # app.register_blueprint(summarization_bp, url_prefix='/api/summarization')
+    app.register_blueprint(summarization_bp, url_prefix='/api/summarization')
     app.register_blueprint(chatbot_bp, url_prefix='/api/chatbot')
     app.register_blueprint(translate_bp, url_prefix='/api/translate_tts')
     app.register_blueprint(forum_bp, url_prefix='/api/forum')
     app.register_blueprint(tracker_bp, url_prefix='/api/tracker')
     app.register_blueprint(main_bp)
+
+    # @app.context_processor
+    # def inject_user():
+    #     return {
+    #         'role': session.get('role'),
+    #         'token': session.get('token')
+    #     }
     
     return app
-
-

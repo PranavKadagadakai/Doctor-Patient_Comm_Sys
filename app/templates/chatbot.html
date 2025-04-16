@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <h2>💬 AI Medical Chatbot</h2>
+  <form action="/api/chatbot/chat" method="POST">
+    <label>Ask a medical question:</label>
+    <input type="text" name="message" placeholder="e.g. What causes high blood pressure?" required>
+    <button type="submit">Ask</button>
+  </form>
+</div>
+{% endblock %}

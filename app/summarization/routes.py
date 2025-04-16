@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from .utils import extract_text
-from .summarizer.py import summarize_text
+from .summarizer import summarize_text
 from flask_jwt_extended import jwt_required
 
 summarization_bp = Blueprint('summarization', __name__)

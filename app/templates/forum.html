@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <h2>🩺 Doctor Discussion Forum</h2>
+  <form action="/api/forum/posts" method="POST">
+    <label>Post Title:</label>
+    <input type="text" name="title" required>
+
+    <label>Content:</label>
+    <textarea name="content" rows="4" required></textarea>
+
+    <button type="submit">Post</button>
+  </form>
+</div>
+{% endblock %}
