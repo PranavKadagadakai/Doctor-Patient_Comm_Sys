@@ -1,36 +1,40 @@
-from flask import Blueprint, request, jsonify, send_file
-from flask_jwt_extended import jwt_required, get_jwt_identity
-from .tts import text_to_speech
-import os
+from flask import Blueprint, request, jsonify, Response
+from flask_jwt_extended import jwt_required
+import io
+from gtts import gTTS
+from googletrans import Translator
+import asyncio
 
 translate_bp = Blueprint('translate', __name__)
 
-@translate_bp.route('/translate_tts', methods=['POST'])
-@jwt_required()
-def translate_and_speak():
-    print("Headers received:", dict(request.headers))
-    current_user = get_jwt_identity()
-    data = request.get_json()
-    text = data.get('text')
-    target_lang = data.get('target_lang')  # e.g. 'hi', 'fr', 'es'
-
-    if not text or not target_lang:
-        return jsonify({"error": "Missing text or target_lang"}), 400
-
+@translate_bp.route('/translate', methods=['POST'])
+def translate_tts():
     try:
-        mp3_path, translated = text_to_speech(text, target_lang)
-        filename = os.path.basename(mp3_path)
+        data = request.get_json()
+        text = data['text']
+        target_lang = data['target_lang']
 
-        return jsonify({
-            "translated_text": translated,
-            "audio_url": f"/api/translate_tts/audio/{filename}"
-        })
+        # Initialize the translator
+        translator = Translator()
+
+        # Run the async translation function
+        translated = asyncio.run(translator.translate(text, dest=target_lang))
+
+        # Generate TTS
+        tts = gTTS(text=translated.text, lang=target_lang)
+        audio_io = io.BytesIO()
+        tts.write_to_fp(audio_io)
+        audio_io.seek(0)
+
+        # Stream audio with correct headers
+        return Response(
+            audio_io,
+            mimetype='audio/mpeg',
+            headers={
+                'Content-Disposition': 'inline; filename=translated_audio.mp3'
+            }
+        )
+
     except Exception as e:
+        print("[TTS ERROR]", str(e))
         return jsonify({"error": str(e)}), 500
-
-@translate_bp.route('/audio/<filename>', methods=['GET'])
-def serve_audio(filename):
-    filepath = os.path.join('uploads/audio', filename)
-    if not os.path.exists(filepath):
-        return jsonify({"error": "File not found"}), 404
-    return send_file(filepath, mimetype='audio/mpeg')

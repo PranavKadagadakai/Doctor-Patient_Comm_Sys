@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, session
 from ..models import User
 from ..extensions import db
 from flask_jwt_extended import create_access_token
@@ -33,5 +33,8 @@ def login():
         return jsonify({'msg': 'Invalid credentials'}), 401
 
     access_token = create_access_token(identity={'id': user.id, 'role': user.role})
+    session['token'] = access_token
+    session['role'] = user.role
+    session['user_id'] = user.id
     return jsonify(access_token=access_token)
 

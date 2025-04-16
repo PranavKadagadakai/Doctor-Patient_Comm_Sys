@@ -11,7 +11,7 @@
                 <div class="card-body">
                     <p class="lead mb-4">Enter your text to translate and convert to speech in your chosen language.</p>
 
-                    <form action="/api/translate_tts/translate_tts" method="POST" id="translate-form">
+                    <form id="translate-form">
                         <div class="mb-4">
                             <label for="input-text" class="form-label fw-bold">Enter text:</label>
                             <textarea class="form-control" id="input-text" name="text" rows="5" placeholder="Type or paste your text here..." required></textarea>
@@ -111,51 +111,40 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const form = document.getElementById('translate-form');
-    
-        form.addEventListener('submit', async function (e) {
-            e.preventDefault();
-    
-            const token = "{{ token | tojson | safe }}"; // Passed in from Flask session to template
-            console.log("Token:", token);
-            console.log("Token from template:", "{{ token }}");
-    
-            const formData = new FormData(form);
-            const data = {
-                text: formData.get("text"),
-                source_lang: formData.get("source_lang"),
-                target_lang: formData.get("target_lang"),
-                voice_gender: formData.get("voice_gender"),
-                speech_rate: parseFloat(formData.get("speech_rate"))
-            };
-    
-            try {
-                const response = await fetch("/api/translate_tts/translate_tts", {
-                    method: "POST",
-                    mode: "same-origin",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`
-                    },
-                    body: JSON.stringify(data)
-                });
-    
-                const result = await response.json();
-    
-                if (response.ok) {
-                    alert(`Translated Text: ${result.translated_text}`);
-                    const audio = new Audio(result.audio_url);
-                    audio.play();
-                } else {
-                    alert(result.msg || "Error during translation");
-                }
-            } catch (error) {
-                console.error("Request failed:", error);
-                alert("Something went wrong. Check console.");
+    const token = {{ token | tojson | safe }};
+
+    document.getElementById("translate-form").addEventListener("submit", function (e) {
+        e.preventDefault(); // prevent normal form submission
+
+        const formData = new FormData(this);
+        const data = Object.fromEntries(formData.entries());
+
+        fetch("/api/translate_tts/translate", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify(data)
+        })
+        .then(res => {
+            if (!res.ok) {
+                throw new Error("Unauthorized or failed");
             }
+            return res.blob(); // if you're returning audio file
+        })
+        .then(blob => {
+            // You can optionally play or download the audio
+            const audioUrl = URL.createObjectURL(blob);
+            const audio = new Audio(audioUrl);
+            audio.play();
+        })
+        .catch(err => {
+            console.error(err);
+            alert("Failed to translate or speak the text.");
         });
     });
-    </script>    
+</script>    
     
 {% endblock %}

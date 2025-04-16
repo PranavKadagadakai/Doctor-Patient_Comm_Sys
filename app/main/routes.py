@@ -1,8 +1,8 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session
+from flask import Blueprint, render_template, request, redirect, url_for, session
 from flask_jwt_extended import create_access_token
 from app.models import User
 from app.extensions import db
-from werkzeug.security import generate_password_hash
+# from werkzeug.security import generate_password_hash
 from .decorators import login_required_ui
 
 main_bp = Blueprint('main', __name__)

@@ -33,7 +33,7 @@ python3 -m venv .venv
 # Activate virtual environment
 echo "⚙️ Activating virtual environment..."
 if [ "$PLATFORM" = "Windows" ]; then
-    source .venv/Scripts/activate
+    .venv/Scripts/activate.bat
 else
     source .venv/bin/activate
 fi
@@ -55,7 +55,7 @@ pip install -r requirements.txt
 echo "✅ Setup complete!"
 echo "🔁 Activate the environment using:"
 if [ "$PLATFORM" = "Windows" ]; then
-    echo "    source .venv/Scripts/activate"
+    echo "    .venv/Scripts/activate.bat"
 else
     echo "    source .venv/bin/activate"
 fi

@@ -2,21 +2,17 @@ from gtts import gTTS
 from googletrans import Translator
 import os
 import uuid
+import asyncio
+
 
 translator = Translator()
 
 def text_to_speech(text, lang='en'):
     try:
-        translated = translator.translate(text, dest=lang).text
-        print(f"Translated text: {translated}")
-
-        audio_dir = os.path.join('uploads/audio')
-        os.makedirs(audio_dir, exist_ok=True)
-
-        filename = f"{uuid.uuid4().hex}.mp3"
-        path = os.path.join(audio_dir, filename)
-
-        tts = gTTS(text=translated, lang=lang)
+        translated = asyncio.run(Translator.translate(text, lang))
+        tts = gTTS(translated.text, lang=lang)
+        path = f"static/audio/{lang}_output.mp3"
+        os.makedirs(os.path.dirname(path), exist_ok=True)
         tts.save(path)
 
         return path, translated
