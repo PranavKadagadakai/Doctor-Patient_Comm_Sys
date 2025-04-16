@@ -72,35 +72,41 @@
 
     form.addEventListener("submit", async function (e) {
         e.preventDefault();
-
+    
         const fileInput = document.getElementById("file-upload");
+        const file = fileInput.files[0];
+    
+        if (!file) {
+            resultDiv.innerHTML = `<div class="text-danger">❗ Please upload a file before submitting.</div>`;
+            return;
+        }
+    
         const formData = new FormData();
-        formData.append("file", fileInput.files[0]);
+        formData.append("file", file);
         formData.append("include_diagnoses", document.getElementById("include-diagnoses").checked);
         formData.append("include_medications", document.getElementById("include-medications").checked);
         formData.append("include_recommendations", document.getElementById("include-recommendations").checked);
-
+    
         resultDiv.innerHTML = `<div class="text-info"><i class="fas fa-spinner fa-spin"></i> Generating summary...</div>`;
-
+    
         try {
             const response = await fetch("/api/summarization/summarize", {
                 method: "POST",
+                // 🚫 DO NOT SET Content-Type
                 headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json",
                     "Authorization": "Bearer " + token
                 },
                 body: formData
             });
-
+    
             const result = await response.json();
             console.log("Response:", result);
-
+    
             if (!response.ok) {
                 resultDiv.innerHTML = `<div class="text-danger">❗ ${result.msg || result.error || 'Unknown error'}</div>`;
                 return;
             }
-
+    
             resultDiv.innerHTML = `
                 <div class="alert alert-success mt-3">
                     <h5>Summary:</h5>

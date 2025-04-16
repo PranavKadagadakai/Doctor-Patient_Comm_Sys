@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2>Edit Profile</h2>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        {{ form.full_name.label }} {{ form.full_name(size=32) }}<br>
+        {{ form.role.label }} {{ form.role(size=32) }}<br>
+        {{ form.age.label }} {{ form.age }}<br>
+        {{ form.phone.label }} {{ form.phone(size=32) }}<br>
+        {{ form.address.label }} {{ form.address(size=32) }}<br>
+        <button type="submit" class="btn btn-success mt-2">Save</button>
+    </form>
+</div>
+{% endblock %}

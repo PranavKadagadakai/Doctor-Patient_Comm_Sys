@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container">
-    <h2>Hello, {{ role.capitalize() }}!</h2>
+    <h2>Hello, {{ username.capitalize() }}!</h2>
 
     {% if role == 'doctor' %}
     <div class="dashboard-grid">

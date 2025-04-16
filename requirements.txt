@@ -15,3 +15,5 @@ google-auth
 google-genai
 markdown
 googletrans
+flask_wtf
+flask_login

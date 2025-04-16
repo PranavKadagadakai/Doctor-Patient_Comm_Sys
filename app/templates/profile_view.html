@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2>Profile</h2>
+    {% if user.is_authenticated %}
+        <ul>
+            <li>Username: {{ user.username }}</li>
+            <li>Email: {{ user.email }}</li>
+            <li>Full Name: {{ profile.full_name or "N/A" }}</li>
+            <li>Age: {{ profile.age or "N/A" }}</li>
+            <li>Role: {{ profile.role or "N/A" }}</li>
+            <li>Phone: {{ profile.phone or "N/A" }}</li>
+            <li>Address: {{ profile.address or "N/A" }}</li>
+            {% if profile.role == 'student' %}
+                <li>USN: {{ profile.usn or "N/A" }}</li>
+            {% endif %}
+        </ul>
+        <a href="{{ url_for('profile.edit_profile') }}" class="btn btn-primary">Edit Profile</a>
+    {% else %}
+        <p>Please <a href="{{ url_for('main.login_page') }}">log in</a> to view your profile.</p>
+    {% endif %}
+</div>
+{% endblock %}
