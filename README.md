@@ -47,7 +47,7 @@ This system offers the following features:
 
 1. **Clone the repository**
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/PranavKadagadakai/Doctor-Patient_Communication_System.git
 cd Doctor-Patient-Communication-System
 ```
 
