@@ -1,11 +1,105 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container">
-  <h2>💬 AI Medical Chatbot</h2>
-  <form action="/api/chatbot/chat" method="POST">
-    <label>Ask a medical question:</label>
-    <input type="text" name="message" placeholder="e.g. What causes high blood pressure?" required>
-    <button type="submit">Ask</button>
-  </form>
+    <h2>💬 AI Medical Chatbot</h2>
+
+    <div class="chat-container">
+        <div class="chat-header">
+            <h3>Ask our AI about medical topics</h3>
+            <p>Get answers to your health-related questions from our medical assistant</p>
+        </div>
+
+        <div class="chat-messages" id="chat-history">
+            <!-- Chat messages will appear here -->
+            <div class="system-message">
+                Hello! I'm your medical assistant. How can I help you today?
+            </div>
+        </div>
+
+        <form action="/api/chatbot/chat" method="POST" id="chat-form">
+            <div class="input-group">
+                <label for="user-message">Your question:</label>
+                <input type="text" id="user-message" name="message"
+                       placeholder="e.g. What causes high blood pressure?" required>
+            </div>
+            <button type="submit" class="send-btn">
+                <span>Ask</span>
+            </button>
+        </form>
+
+        <div class="disclaimer">
+            <p><strong>Note:</strong> This AI assistant provides general information only and is not a substitute for professional medical advice, diagnosis, or treatment.</p>
+        </div>
+    </div>
 </div>
+
+<style>
+    .chat-container {
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #e1e4e8;
+    }
+
+    .chat-header {
+        background-color: #f5f7f9;
+        padding: 15px;
+        border-bottom: 1px solid #e1e4e8;
+    }
+
+        .chat-header h3 {
+            margin: 0 0 5px 0;
+            color: #2e86de;
+        }
+
+        .chat-header p {
+            margin: 0;
+            color: #666;
+            font-size: 14px;
+        }
+
+    .chat-messages {
+        padding: 20px;
+        min-height: 200px;
+        max-height: 400px;
+        overflow-y: auto;
+        background-color: white;
+    }
+
+    .system-message {
+        background-color: #e3f2fd;
+        padding: 12px 15px;
+        border-radius: 18px;
+        margin-bottom: 15px;
+        display: inline-block;
+    }
+
+    .input-group {
+        margin-bottom: 10px;
+    }
+
+    #chat-form {
+        padding: 15px;
+        background-color: #f5f7f9;
+        border-top: 1px solid #e1e4e8;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .send-btn {
+        background-color: #2e86de;
+        padding: 10px 20px;
+    }
+
+    .disclaimer {
+        margin-top: 15px;
+        padding: 10px;
+        background-color: #fff3cd;
+        border-left: 4px solid #ffc107;
+        font-size: 14px;
+    }
+</style>
 {% endblock %}

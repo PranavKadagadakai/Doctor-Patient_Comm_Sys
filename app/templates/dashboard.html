@@ -1,30 +1,164 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container">
-  <h2>Hello, {{ role.capitalize() }}!</h2>
+    <h2>Hello, {{ role.capitalize() }}!</h2>
 
-  {% if role == 'doctor' %}
-  <div class="section">
-    <h3>👨‍⚕️ Doctor Dashboard</h3>
-    <ul>
-      <li><a href="{{ url_for('main.forum_page') }}">🩺 Access Doctor Forum</a></li>
-      <li><a href="{{ url_for('main.messaging_page') }}">📩 Chat with Patients</a></li>
-      <li><a href="{{ url_for('main.summarize_page') }}">📄 View Medical Summaries</a></li>
-      <li><a href="{{ url_for('main.tracker_page') }}">📊 Patient Medical Tracker</a></li>
-    </ul>
-  </div>
-  {% elif role == 'patient' %}
-  <div class="section">
-    <h3>🧑‍⚕️ Patient Dashboard</h3>
-    <ul>
-      <li><a href="{{ url_for('main.summarize_page') }}">📝 Upload & Summarize Reports</a></li>
-      <li><a href="{{ url_for('main.chatbot_page') }}">💬 Ask the AI Medical Chatbot</a></li>
-      <li><a href="{{ url_for('main.messaging_page') }}">📩 Secure Message Doctor</a></li>
-      <li><a href="{{ url_for('main.translate_page') }}">🌍 Translation & TTS</a></li>
-      <li><a href="{{ url_for('main.tracker_page') }}">📅 Update Your Medical Tracker</a></li>
-    </ul>
-  </div>
-  {% endif %}
+    {% if role == 'doctor' %}
+    <div class="dashboard-grid">
+        <h3 class="section-title">👨‍⚕️ Doctor Dashboard</h3>
 
+        <div class="dashboard-row">
+            <div class="dashboard-card">
+                <a href="{{ url_for('main.forum_page') }}" class="dashboard-link">
+                    <div class="card-icon">🩺</div>
+                    <div class="card-text">Access Doctor Forum</div>
+                </a>
+            </div>
+
+            <div class="dashboard-card">
+                <a href="{{ url_for('main.messaging_page') }}" class="dashboard-link">
+                    <div class="card-icon">📩</div>
+                    <div class="card-text">Chat with Patients</div>
+                </a>
+            </div>
+        </div>
+
+        <div class="dashboard-row">
+            <div class="dashboard-card">
+                <a href="{{ url_for('main.summarize_page') }}" class="dashboard-link">
+                    <div class="card-icon">📄</div>
+                    <div class="card-text">View Medical Summaries</div>
+                </a>
+            </div>
+
+            <div class="dashboard-card">
+                <a href="{{ url_for('main.tracker_page') }}" class="dashboard-link">
+                    <div class="card-icon">📊</div>
+                    <div class="card-text">Patient Medical Tracker</div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {% elif role == 'patient' %}
+    <div class="dashboard-grid">
+        <h3 class="section-title">🧑‍⚕️ Patient Dashboard</h3>
+
+        <div class="dashboard-row">
+            <div class="dashboard-card">
+                <a href="{{ url_for('main.summarize_page') }}" class="dashboard-link">
+                    <div class="card-icon">📝</div>
+                    <div class="card-text">Upload & Summarize Reports</div>
+                </a>
+            </div>
+
+            <div class="dashboard-card">
+                <a href="{{ url_for('main.chatbot_page') }}" class="dashboard-link">
+                    <div class="card-icon">💬</div>
+                    <div class="card-text">Ask the AI Medical Chatbot</div>
+                </a>
+            </div>
+        </div>
+
+        <div class="dashboard-row">
+            <div class="dashboard-card">
+                <a href="{{ url_for('main.messaging_page') }}" class="dashboard-link">
+                    <div class="card-icon">📩</div>
+                    <div class="card-text">Secure Message Doctor</div>
+                </a>
+            </div>
+
+            <div class="dashboard-card">
+                <a href="{{ url_for('main.translate_page') }}" class="dashboard-link">
+                    <div class="card-icon">🌍</div>
+                    <div class="card-text">Translation & TTS</div>
+                </a>
+            </div>
+        </div>
+
+        <div class="dashboard-row">
+            <div class="dashboard-card center-card">
+                <a href="{{ url_for('main.tracker_page') }}" class="dashboard-link">
+                    <div class="card-icon">📅</div>
+                    <div class="card-text">Update Your Medical Tracker</div>
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
 </div>
+
+<style>
+    .dashboard-grid {
+        margin-top: 30px;
+    }
+
+    .section-title {
+        font-size: 24px;
+        margin-bottom: 25px;
+        color: #2e86de;
+        border-bottom: 2px solid #e1e4e8;
+        padding-bottom: 10px;
+    }
+
+    .dashboard-row {
+        display: flex;
+        margin-bottom: 20px;
+        gap: 20px;
+    }
+
+    .dashboard-card {
+        flex: 1;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+        .dashboard-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+    .dashboard-link {
+        display: block;
+        padding: 25px 20px;
+        text-decoration: none;
+        color: #333;
+        height: 100%;
+    }
+
+    .card-icon {
+        font-size: 32px;
+        margin-bottom: 15px;
+        text-align: center;
+    }
+
+    .card-text {
+        font-size: 18px;
+        text-align: center;
+        font-weight: 500;
+    }
+
+    .center-card {
+        max-width: 48%;
+        margin: 0 auto;
+    }
+
+    /* Make sure container is wide enough */
+    .container {
+        max-width: 900px;
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+        .dashboard-row {
+            flex-direction: column;
+        }
+
+        .center-card {
+            max-width: 100%;
+        }
+    }
+</style>
 {% endblock content %}

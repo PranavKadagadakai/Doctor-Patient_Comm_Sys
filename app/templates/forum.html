@@ -1,15 +1,54 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container">
-  <h2>🩺 Doctor Discussion Forum</h2>
-  <form action="/api/forum/posts" method="POST">
-    <label>Post Title:</label>
-    <input type="text" name="title" required>
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0"><i class="fas fa-stethoscope me-2"></i>Doctor Discussion Forum</h2>
+                </div>
+                <div class="card-body">
+                    <form action="/api/forum/posts" method="POST" id="post-form">
+                        <div class="mb-3">
+                            <label for="post-title" class="form-label fw-bold">Post Title:</label>
+                            <input type="text" class="form-control" id="post-title" name="title" placeholder="Enter a descriptive title" required>
+                        </div>
 
-    <label>Content:</label>
-    <textarea name="content" rows="4" required></textarea>
+                        <div class="mb-3">
+                            <label for="post-category" class="form-label fw-bold">Category:</label>
+                            <select class="form-select" id="post-category" name="category">
+                                <option value="clinical">Clinical Case</option>
+                                <option value="research">Research Discussion</option>
+                                <option value="practice">Practice Management</option>
+                                <option value="education">Medical Education</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
 
-    <button type="submit">Post</button>
-  </form>
+                        <div class="mb-3">
+                            <label for="post-content" class="form-label fw-bold">Content:</label>
+                            <textarea class="form-control" id="post-content" name="content" rows="6" placeholder="Share your question, insights or case details..." required></textarea>
+                            <div class="form-text">Please avoid sharing protected patient information.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="post-tags" class="form-label fw-bold">Tags:</label>
+                            <input type="text" class="form-control" id="post-tags" name="tags" placeholder="Separate tags with commas (e.g., cardiology, treatment, advice)">
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="reset" class="btn btn-light me-md-2">Clear</button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane me-1"></i> Post Discussion
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-muted">
+                    <small>Posts are reviewed by moderators. Please follow our <a href="/community-guidelines">community guidelines</a>.</small>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

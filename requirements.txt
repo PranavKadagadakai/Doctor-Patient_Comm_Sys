@@ -11,3 +11,5 @@ flask-socketio
 flask-cors
 eventlet
 gtts
+google-auth
+google-genai

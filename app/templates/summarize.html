@@ -1,11 +1,65 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container">
-  <h2>🧾 Medical Report Summarization</h2>
-  <form action="/api/summarization/summarize" method="POST" enctype="multipart/form-data">
-    <label>Select medical report (PDF/DOCX/TXT):</label>
-    <input type="file" name="file" required>
-    <button type="submit">Summarize</button>
-  </form>
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0"><i class="fas fa-file-medical me-2"></i>Medical Report Summarization</h2>
+                </div>
+
+                <div class="card-body">
+                    <p class="lead mb-4">Upload your medical document to generate a concise, structured summary highlighting key findings and recommendations.</p>
+
+                    <form action="/api/summarization/summarize" method="POST" enctype="multipart/form-data" id="summarization-form">
+                        <div class="mb-4">
+                            <label for="file-upload" class="form-label fw-bold">Select medical report:</label>
+                            <div class="input-group">
+                                <input type="file" class="form-control" id="file-upload" name="file" accept=".pdf,.docx,.txt" required>
+                                <span class="input-group-text bg-light"><i class="fas fa-file-upload"></i></span>
+                            </div>
+                            <div class="form-text">Supported formats: PDF, DOCX, TXT (Max size: 10MB)</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Summarization options:</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="include-diagnoses" name="include_diagnoses" checked>
+                                <label class="form-check-label" for="include-diagnoses">Include diagnoses</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="include-medications" name="include_medications" checked>
+                                <label class="form-check-label" for="include-medications">Include medications</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="include-recommendations" name="include_recommendations" checked>
+                                <label class="form-check-label" for="include-recommendations">Include recommendations</label>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                            <button type="reset" class="btn btn-light me-md-2">Clear</button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-magic me-1"></i> Generate Summary
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card-footer text-muted">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-shield-alt me-2"></i>
+                        <small>Your documents are processed securely and not stored after summarization is complete.</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 text-center">
+                <a href="/sample-report" class="text-decoration-none">
+                    <i class="fas fa-eye me-1"></i> View sample report summary
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

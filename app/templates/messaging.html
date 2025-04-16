@@ -1,8 +1,152 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container">
-  <h2>🔐 Real-Time Messaging</h2>
-  <p>This feature uses WebSockets. A JavaScript-based frontend will go here.</p>
-  <p>We’ll implement chat between patient and doctor using Socket.IO + JWT.</p>
+<div class="container mt-4 mb-4">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">🔐 Real-Time Messaging</h2>
+        </div>
+
+        <div class="card-body p-0">
+            <!-- Chat Messages Area -->
+            <div class="chat-container">
+                <div class="chat-messages p-3" id="messageContainer" style="height: 400px; overflow-y: auto;">
+                    <!-- Messages will be displayed here via JavaScript -->
+                    <div class="message-item doctor mb-3">
+                        <div class="message-content">
+                            <div class="message-header">
+                                <strong>Dr. Johnson</strong>
+                                <small class="text-muted">10:15 AM</small>
+                            </div>
+                            <p class="mb-0">Hello! How are you feeling today?</p>
+                        </div>
+                    </div>
+
+                    <div class="message-item patient mb-3">
+                        <div class="message-content">
+                            <div class="message-header">
+                                <strong>You</strong>
+                                <small class="text-muted">10:17 AM</small>
+                            </div>
+                            <p class="mb-0">I'm feeling much better since starting the new medication. The pain has decreased significantly.</p>
+                        </div>
+                    </div>
+
+                    <div class="system-message text-center mb-3">
+                        <small class="text-muted">--- Yesterday ---</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Message Input Area -->
+            <div class="message-input-container p-3 border-top">
+                <form id="messageForm">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="messageInput" placeholder="Type your message..." required>
+                        <button class="btn btn-primary" type="submit">Send</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card-footer">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="badge bg-success me-2">Online</span>
+                    <small>Dr. Johnson is available</small>
+                </div>
+                <div>
+                    <button class="btn btn-sm btn-outline-secondary me-2" id="attachButton">
+                        <i class="fas fa-paperclip"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary" id="videoCallButton">
+                        <i class="fas fa-video"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Simple implementation notes -->
+    <div class="mt-3 text-muted">
+        <small>This chat interface uses Socket.IO for real-time messaging. Authentication is handled via JWT.</small>
+    </div>
 </div>
+
+<style>
+    .message-item {
+        display: flex;
+        margin-bottom: 10px;
+    }
+
+    .message-content {
+        max-width: 75%;
+        padding: 10px;
+        border-radius: 10px;
+        background-color: #f1f1f1;
+    }
+
+    .message-item.doctor .message-content {
+        background-color: #e3f2fd;
+    }
+
+    .message-item.patient {
+        justify-content: flex-end;
+    }
+
+        .message-item.patient .message-content {
+            background-color: #e8f5e9;
+        }
+
+    .message-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 5px;
+        font-size: 0.9rem;
+    }
+</style>
+
+<script>
+  // This would be replaced with actual Socket.IO implementation
+  document.addEventListener('DOMContentLoaded', function() {
+    const messageForm = document.getElementById('messageForm');
+    const messageInput = document.getElementById('messageInput');
+    const messageContainer = document.getElementById('messageContainer');
+
+    messageForm.addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      if (messageInput.value.trim() !== '') {
+        // Send message via Socket.IO (placeholder)
+        addMessage(messageInput.value, 'patient');
+        messageInput.value = '';
+
+        // Auto-scroll to bottom
+        messageContainer.scrollTop = messageContainer.scrollHeight;
+      }
+    });
+
+    function addMessage(text, sender) {
+      const now = new Date();
+      const time = now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
+
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message-item ${sender} mb-3`;
+
+      messageDiv.innerHTML = `
+        <div class="message-content">
+          <div class="message-header">
+            <strong>${sender === 'patient' ? 'You' : 'Dr. Johnson'}</strong>
+            <small class="text-muted">${time}</small>
+          </div>
+          <p class="mb-0">${text}</p>
+        </div>
+      `;
+
+      messageContainer.appendChild(messageDiv);
+    }
+
+    // Scroll to bottom initially
+    messageContainer.scrollTop = messageContainer.scrollHeight;
+  });
+</script>
 {% endblock %}

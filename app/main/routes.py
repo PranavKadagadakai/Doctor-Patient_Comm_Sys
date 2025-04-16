@@ -4,6 +4,7 @@ from app.models import User
 from app.extensions import db
 from werkzeug.security import generate_password_hash
 from .decorators import login_required_ui
+from app.chatbot.bot_engine import ChatBot
 
 main_bp = Blueprint('main', __name__)
 
