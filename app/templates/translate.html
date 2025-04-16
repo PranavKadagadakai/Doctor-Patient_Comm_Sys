@@ -109,4 +109,53 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('translate-form');
+    
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+    
+            const token = "{{ token | tojson | safe }}"; // Passed in from Flask session to template
+            console.log("Token:", token);
+            console.log("Token from template:", "{{ token }}");
+    
+            const formData = new FormData(form);
+            const data = {
+                text: formData.get("text"),
+                source_lang: formData.get("source_lang"),
+                target_lang: formData.get("target_lang"),
+                voice_gender: formData.get("voice_gender"),
+                speech_rate: parseFloat(formData.get("speech_rate"))
+            };
+    
+            try {
+                const response = await fetch("/api/translate_tts/translate_tts", {
+                    method: "POST",
+                    mode: "same-origin",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify(data)
+                });
+    
+                const result = await response.json();
+    
+                if (response.ok) {
+                    alert(`Translated Text: ${result.translated_text}`);
+                    const audio = new Audio(result.audio_url);
+                    audio.play();
+                } else {
+                    alert(result.msg || "Error during translation");
+                }
+            } catch (error) {
+                console.error("Request failed:", error);
+                alert("Something went wrong. Check console.");
+            }
+        });
+    });
+    </script>    
+    
 {% endblock %}

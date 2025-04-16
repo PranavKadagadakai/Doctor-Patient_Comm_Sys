@@ -11,7 +11,7 @@
                 <div class="card-body">
                     <p class="lead mb-4">Upload your medical document to generate a concise, structured summary highlighting key findings and recommendations.</p>
 
-                    <form action="/api/summarization/summarize" method="POST" enctype="multipart/form-data" id="summarization-form">
+                    <form id="summarization-form">
                         <div class="mb-4">
                             <label for="file-upload" class="form-label fw-bold">Select medical report:</label>
                             <div class="input-group">
@@ -44,6 +44,8 @@
                             </button>
                         </div>
                     </form>
+
+                    <div id="summary-result" class="mt-4"></div>
                 </div>
 
                 <div class="card-footer text-muted">
@@ -62,4 +64,53 @@
         </div>
     </div>
 </div>
+
+<script>
+    const form = document.getElementById("summarization-form");
+    const token = "{{ token | default('') | safe }}";
+    const resultDiv = document.getElementById("summary-result");
+
+    form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const fileInput = document.getElementById("file-upload");
+        const formData = new FormData();
+        formData.append("file", fileInput.files[0]);
+        formData.append("include_diagnoses", document.getElementById("include-diagnoses").checked);
+        formData.append("include_medications", document.getElementById("include-medications").checked);
+        formData.append("include_recommendations", document.getElementById("include-recommendations").checked);
+
+        resultDiv.innerHTML = `<div class="text-info"><i class="fas fa-spinner fa-spin"></i> Generating summary...</div>`;
+
+        try {
+            const response = await fetch("/api/summarization/summarize", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                body: formData
+            });
+
+            const result = await response.json();
+            console.log("Response:", result);
+
+            if (!response.ok) {
+                resultDiv.innerHTML = `<div class="text-danger">❗ ${result.msg || result.error || 'Unknown error'}</div>`;
+                return;
+            }
+
+            resultDiv.innerHTML = `
+                <div class="alert alert-success mt-3">
+                    <h5>Summary:</h5>
+                    <pre class="mb-0">${result.summary}</pre>
+                </div>
+            `;
+        } catch (error) {
+            console.error("Error:", error);
+            resultDiv.innerHTML = `<div class="text-danger">❗ Network or server error</div>`;
+        }
+    });
+</script>
 {% endblock %}

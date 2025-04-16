@@ -4,7 +4,6 @@ from app.models import User
 from app.extensions import db
 from werkzeug.security import generate_password_hash
 from .decorators import login_required_ui
-from app.chatbot.bot_engine import ChatBot
 
 main_bp = Blueprint('main', __name__)
 
@@ -70,7 +69,7 @@ def logout():
 @main_bp.route('/summarize')
 @login_required_ui
 def summarize_page():
-    return render_template('summarize.html')
+    return render_template('summarize.html', token=session.get('token'))
 
 @main_bp.route('/chatbot')
 @login_required_ui
@@ -80,7 +79,8 @@ def chatbot_page():
 @main_bp.route('/translate')
 @login_required_ui
 def translate_page():
-    return render_template('translate.html')
+    print("Session token:", session.get('token'))
+    return render_template('translate.html', token=session.get('token'))
 
 @main_bp.route('/messaging')
 @login_required_ui

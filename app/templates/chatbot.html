@@ -31,6 +31,79 @@
     </div>
 </div>
 
+<style>
+    .chat-container {
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #e1e4e8;
+    }
+
+    .chat-header {
+        background-color: #f5f7f9;
+        padding: 15px;
+        border-bottom: 1px solid #e1e4e8;
+    }
+
+        .chat-header h3 {
+            margin: 0 0 5px 0;
+            color: #2e86de;
+        }
+
+        .chat-header p {
+            margin: 0;
+            color: #666;
+            font-size: 14px;
+        }
+
+    .chat-messages {
+        padding: 20px;
+        min-height: 200px;
+        max-height: 400px;
+        overflow-y: auto;
+        background-color: white;
+    }
+
+    .system-message {
+        background-color: #e3f2fd;
+        padding: 12px 15px;
+        border-radius: 18px;
+        margin-bottom: 15px;
+        display: inline-block;
+    }
+
+    .input-group {
+        margin-bottom: 10px;
+    }
+
+    #chat-form {
+        padding: 15px;
+        background-color: #f5f7f9;
+        border-top: 1px solid #e1e4e8;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .send-btn {
+        background-color: #2e86de;
+        padding: 10px 20px;
+    }
+
+    .disclaimer {
+        margin-top: 15px;
+        padding: 10px;
+        background-color: #fff3cd;
+        border-left: 4px solid #ffc107;
+        font-size: 14px;
+    }
+</style>
+
+<!-- Add Marked.js to handle Markdown -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
 <script>
     const form = document.getElementById("chat-form");
     const input = document.getElementById("user-message");
@@ -46,6 +119,11 @@
         console.log("Sending message:", message);
         console.log("Token:", token);
 
+        // Show user message
+        chatHistory.innerHTML += `
+            <div class="user-message">${message}</div>
+        `;
+
         try {
             const response = await fetch("/api/chatbot/chat", {
                 method: "POST",
@@ -53,7 +131,7 @@
                     "Content-Type": "application/json",
                     "Accept": "application/json",
                     "Authorization": "Bearer " + token
-                  },
+                },
                 body: JSON.stringify({ message: message })
             });
 
@@ -67,9 +145,11 @@
                 return;
             }
 
+            // Render markdown to HTML safely
+            const renderedMarkdown = marked.parse(result.response);
+
             chatHistory.innerHTML += `
-                <div class="user-message">${message}</div>
-                <div class="system-message">${result.response}</div>
+                <div class="system-message">${renderedMarkdown}</div>
             `;
             input.value = "";
         } catch (err) {

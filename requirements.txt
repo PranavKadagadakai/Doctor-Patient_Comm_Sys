@@ -13,3 +13,5 @@ eventlet
 gtts
 google-auth
 google-genai
+markdown
+googletrans

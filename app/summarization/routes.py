@@ -6,8 +6,17 @@ from flask_jwt_extended import jwt_required
 summarization_bp = Blueprint('summarization', __name__)
 
 @summarization_bp.route('/summarize', methods=['POST'])
-@jwt_required()
+# @jwt_required()
 def summarize():
+    print("=== HEADERS ===")
+    print(request.headers)
+
+    # print("=== RAW BODY ===")
+    # print(request.get_data(as_text=True))  # See raw incoming body
+
+    # print("=== PARSED JSON ===")
+    # data = request.get_json(silent=True)
+    # print(data)
     if 'file' not in request.files:
         return jsonify({'error': 'No file uploaded'}), 400
 

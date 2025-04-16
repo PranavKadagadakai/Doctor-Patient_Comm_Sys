@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
+import markdown
 
 class ChatBot:
     def __init__(self):
@@ -82,6 +83,7 @@ class ChatBot:
                 if chunk.text:
                     output += chunk.text
             
+            output = markdown.markdown(output)
             return output
         except Exception as e:
             return f"Error: {str(e)}"
