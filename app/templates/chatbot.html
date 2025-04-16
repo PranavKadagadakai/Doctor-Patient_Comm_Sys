@@ -22,9 +22,7 @@
                 <input type="text" id="user-message" name="message"
                        placeholder="e.g. What causes high blood pressure?" required>
             </div>
-            <button type="submit" class="send-btn">
-                <span>Ask</span>
-            </button>
+            <button type="submit" class="send-btn">Ask</button>
         </form>
 
         <div class="disclaimer">
@@ -102,4 +100,48 @@
         font-size: 14px;
     }
 </style>
+
+<script>
+    document.getElementById("chat-form").addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const message = document.getElementById("user-message").value;
+        const chatHistory = document.getElementById("chat-history");
+
+        const token = "{{ token | default('') | safe }}";
+        console.log("Token:", token);
+
+        try {
+            const response = await fetch("/api/chatbot/chat", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify({ message })
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                chatHistory.innerHTML += `
+                    <div class="error-message">❗ ${result.msg || result.error || 'Something went wrong'}</div>
+                `;
+                return;
+            }
+            
+            if (result.response) {
+                chatHistory.innerHTML += `
+                    <div class="user-message">${message}</div>
+                    <div class="system-message">${result.response}</div>
+                `;
+            }
+            document.getElementById("user-message").value = "";
+        } catch (err) {
+            console.error("Request failed:", err);
+        }
+    });
+</script>
+
 {% endblock %}

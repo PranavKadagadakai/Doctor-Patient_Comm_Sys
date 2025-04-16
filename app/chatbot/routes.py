@@ -8,6 +8,7 @@ chatbot_bp = Blueprint('chatbot', __name__)
 @jwt_required()
 def chat():
     data = request.get_json()
+    print("Received data:", data)
     if not data or 'message' not in data:
         return jsonify({'error': 'Message is required'}), 400
 

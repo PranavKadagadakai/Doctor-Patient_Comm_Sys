@@ -75,7 +75,7 @@ def summarize_page():
 @main_bp.route('/chatbot')
 @login_required_ui
 def chatbot_page():
-    return render_template('chatbot.html')
+    return render_template('chatbot.html', token=session.get('token'))
 
 @main_bp.route('/translate')
 @login_required_ui
