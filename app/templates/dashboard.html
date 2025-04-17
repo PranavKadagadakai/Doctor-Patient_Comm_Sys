@@ -1,71 +1,122 @@
 {% extends "base.html" %}
 {% block content %}
 <section class="text-gray-600 body-font bg-gray-50 py-20">
-    <div class="container px-5 mx-auto">
-      <div class="flex flex-col text-center w-full mb-16">
-        <h2 class="text-xs text-indigo-500 tracking-widest font-medium title-font mb-1">MEDICALMATE</h2>
-        <h1 class="sm:text-4xl text-3xl font-bold title-font text-gray-900 mb-4">Doctor-Patient Communication Dashboard</h1>
-        <p class="lg:w-2/3 mx-auto leading-relaxed text-base text-gray-600">Empowering seamless and intelligent healthcare communication through AI-driven tools.</p>
-      </div>
-      <div class="flex flex-wrap -m-4">
-        <!-- AI Chatbot -->
-        <div class="p-4 md:w-1/2 lg:w-1/4">
-          <div class="h-full border-2 border-gray-200 rounded-lg p-6 text-center bg-white shadow-sm hover:shadow-md transition duration-300">
-            <h2 class="text-lg font-semibold text-gray-900 mb-2">AI Chatbot</h2>
-            <p class="leading-relaxed mb-4 text-gray-600">Instant responses to patient queries powered by AI. Available 24/7.</p>
-            <a href="{{ url_for('main.chatbot_page') }}" class="text-indigo-500 inline-flex items-center cursor-pointer">Open Chat
-              <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                class="w-4 h-4 ml-2" viewBox="0 0 24 24">
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
-            </a>
-          </div>
-        </div>
-  
+  <div class="container px-5 mx-auto">
+    <div class="flex flex-col text-center w-full mb-16">
+      <h2 class="text-xs text-indigo-500 tracking-widest font-medium title-font mb-1">MEDIMATE</h2>
+      <h1 class="sm:text-4xl text-3xl font-bold title-font text-gray-900 mb-4">Doctor-Patient Communication Dashboard</h1>
+      <p class="lg:w-2/3 mx-auto leading-relaxed text-base text-gray-600">Empowering seamless and intelligent healthcare communication through AI-driven tools.</p><br>
+      <h1 class="text-2xl tracking-widest font-medium title-font mb-1">Welcome, {{ username }}!</h1>
+    </div>
+    <div class="flex flex-wrap -m-4">
+
+      {% if role == 'doctor' %}
+        <!-- Doctor Dashboard -->
+
         <!-- Summarizer -->
         <div class="p-4 md:w-1/2 lg:w-1/4">
           <div class="h-full border-2 border-gray-200 rounded-lg p-6 text-center bg-white shadow-sm hover:shadow-md transition duration-300">
             <h2 class="text-lg font-semibold text-gray-900 mb-2">Summarizer</h2>
-            <p class="leading-relaxed mb-4 text-gray-600">Get quick summaries of medical reports, prescriptions, or chat history.</p>
-            <a href = "{{ url_for('main.summarize_page') }}" class="text-indigo-500 inline-flex items-center cursor-pointer">Summarize Now
-              <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                class="w-4 h-4 ml-2" viewBox="0 0 24 24">
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
+            <p class="leading-relaxed mb-4 text-gray-600">Quick summaries of reports, prescriptions, or chat history.</p>
+            <a href="{{ url_for('main.summarize_page') }}" class="text-indigo-500 inline-flex items-center cursor-pointer">Summarize Now
+              <svg class="w-4 h-4 ml-2" ...> <path d="M5 12h14M12 5l7 7-7 7"/> </svg>
             </a>
           </div>
         </div>
-  
-        <!-- Text to Speech -->
+
+        <!-- Forum -->
         <div class="p-4 md:w-1/2 lg:w-1/4">
           <div class="h-full border-2 border-gray-200 rounded-lg p-6 text-center bg-white shadow-sm hover:shadow-md transition duration-300">
-            <h2 class="text-lg font-semibold text-gray-900 mb-2">Text-to-Speech</h2>
-            <p class="leading-relaxed mb-4 text-gray-600">Convert any text into clear audio. Ideal for accessibility and convenience.</p>
-            <a href = "{{ url_for('main.translate_page') }}" class="text-indigo-500 inline-flex items-center cursor-pointer">Listen Now
-              <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                class="w-4 h-4 ml-2" viewBox="0 0 24 24">
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
+            <h2 class="text-lg font-semibold text-gray-900 mb-2">Forum</h2>
+            <p class="leading-relaxed mb-4 text-gray-600">Share and discuss medical cases and research securely.</p>
+            <a href="{{ url_for('main.forum_page') }}" class="text-indigo-500 inline-flex items-center cursor-pointer">Go to Forum
+              <svg class="w-4 h-4 ml-2" ...> <path d="M5 12h14M12 5l7 7-7 7"/> </svg>
             </a>
           </div>
         </div>
-  
+
         <!-- Messaging -->
         <div class="p-4 md:w-1/2 lg:w-1/4">
           <div class="h-full border-2 border-gray-200 rounded-lg p-6 text-center bg-white shadow-sm hover:shadow-md transition duration-300">
             <h2 class="text-lg font-semibold text-gray-900 mb-2">Secure Messaging</h2>
-            <p class="leading-relaxed mb-4 text-gray-600">Encrypted chat platform for real-time doctor-patient communication.</p>
-            <a href = "{{ url_for('main.messaging_page') }}" class="text-indigo-500 inline-flex items-center cursor-pointer">Open Messenger
-              <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                class="w-4 h-4 ml-2" viewBox="0 0 24 24">
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
+            <p class="leading-relaxed mb-4 text-gray-600">Encrypted real-time communication with patients.</p>
+            <a href="{{ url_for('main.messaging_page') }}" class="text-indigo-500 inline-flex items-center cursor-pointer">Open Messenger
+              <svg class="w-4 h-4 ml-2" ...> <path d="M5 12h14M12 5l7 7-7 7"/> </svg>
             </a>
           </div>
         </div>
-      </div>
-  
-      
+
+        <!-- Tracking -->
+        <div class="p-4 md:w-1/2 lg:w-1/4">
+          <div class="h-full border-2 border-gray-200 rounded-lg p-6 text-center bg-white shadow-sm hover:shadow-md transition duration-300">
+            <h2 class="text-lg font-semibold text-gray-900 mb-2">Patient Tracking</h2>
+            <p class="leading-relaxed mb-4 text-gray-600">Monitor patient recovery and appointment status.</p>
+            <a href="{{ url_for('main.tracker_page') }}" class="text-indigo-500 inline-flex items-center cursor-pointer">Track Now
+              <svg class="w-4 h-4 ml-2" ...> <path d="M5 12h14M12 5l7 7-7 7"/> </svg>
+            </a>
+          </div>
+        </div>
+
+      {% elif role == 'patient' %}
+        <!-- Patient Dashboard -->
+
+        <!-- AI Chatbot -->
+        <div class="p-4 md:w-1/2 lg:w-1/4">
+          <div class="h-full border-2 border-gray-200 rounded-lg p-6 text-center bg-white shadow-sm hover:shadow-md transition duration-300">
+            <h2 class="text-lg font-semibold text-gray-900 mb-2">AI Chatbot</h2>
+            <p class="leading-relaxed mb-4 text-gray-600">Get instant answers to your health-related queries.</p>
+            <a href="{{ url_for('main.chatbot_page') }}" class="text-indigo-500 inline-flex items-center cursor-pointer">Open Chat
+              <svg class="w-4 h-4 ml-2" ...> <path d="M5 12h14M12 5l7 7-7 7"/> </svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Text to Speech -->
+        <div class="p-4 md:w-1/2 lg:w-1/4">
+          <div class="h-full border-2 border-gray-200 rounded-lg p-6 text-center bg-white shadow-sm hover:shadow-md transition duration-300">
+            <h2 class="text-lg font-semibold text-gray-900 mb-2">Text-to-Speech</h2>
+            <p class="leading-relaxed mb-4 text-gray-600">Convert health info or reports to speech easily.</p>
+            <a href="{{ url_for('main.translate_page') }}" class="text-indigo-500 inline-flex items-center cursor-pointer">Listen Now
+              <svg class="w-4 h-4 ml-2" ...> <path d="M5 12h14M12 5l7 7-7 7"/> </svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Summarizer -->
+        <div class="p-4 md:w-1/2 lg:w-1/4">
+          <div class="h-full border-2 border-gray-200 rounded-lg p-6 text-center bg-white shadow-sm hover:shadow-md transition duration-300">
+            <h2 class="text-lg font-semibold text-gray-900 mb-2">Summarizer</h2>
+            <p class="leading-relaxed mb-4 text-gray-600">Get easy-to-read summaries of prescriptions and reports.</p>
+            <a href="{{ url_for('main.summarize_page') }}" class="text-indigo-500 inline-flex items-center cursor-pointer">Summarize Now
+              <svg class="w-4 h-4 ml-2" ...> <path d="M5 12h14M12 5l7 7-7 7"/> </svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Messaging -->
+        <div class="p-4 md:w-1/2 lg:w-1/4">
+          <div class="h-full border-2 border-gray-200 rounded-lg p-6 text-center bg-white shadow-sm hover:shadow-md transition duration-300">
+            <h2 class="text-lg font-semibold text-gray-900 mb-2">Messaging</h2>
+            <p class="leading-relaxed mb-4 text-gray-600">Chat with your assigned doctor anytime.</p>
+            <a href="{{ url_for('main.messaging_page') }}" class="text-indigo-500 inline-flex items-center cursor-pointer">Message Now
+              <svg class="w-4 h-4 ml-2" ...> <path d="M5 12h14M12 5l7 7-7 7"/> </svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Tracking -->
+        <div class="p-4 md:w-1/2 lg:w-1/4">
+          <div class="h-full border-2 border-gray-200 rounded-lg p-6 text-center bg-white shadow-sm hover:shadow-md transition duration-300">
+            <h2 class="text-lg font-semibold text-gray-900 mb-2">Health Tracker</h2>
+            <p class="leading-relaxed mb-4 text-gray-600">Track your appointments, prescriptions, and recovery progress.</p>
+            <a href="{{ url_for('main.tracker_page') }}" class="text-indigo-500 inline-flex items-center cursor-pointer">Track Progress
+              <svg class="w-4 h-4 ml-2" ...> <path d="M5 12h14M12 5l7 7-7 7"/> </svg>
+            </a>
+          </div>
+        </div>
+
+      {% endif %}
     </div>
-  </section>
-  {% endblock content %}
+  </div>
+</section>
+{% endblock content %}
