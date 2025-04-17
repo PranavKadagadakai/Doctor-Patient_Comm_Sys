@@ -101,7 +101,6 @@ def chatbot_page():
 @main_bp.route('/translate')
 @login_required
 def translate_page():
-    print("Session token:", session.get('token'))
     return render_template('translate.html', token=session.get('token'))
 
 @main_bp.route('/messaging')
