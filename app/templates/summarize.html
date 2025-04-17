@@ -108,15 +108,42 @@
             }
     
             resultDiv.innerHTML = `
-                <div class="alert alert-success mt-3">
-                    <h5>Summary:</h5>
-                    <pre class="mb-0">${result.summary}</pre>
-                </div>
-            `;
+    <div class="card border-success shadow-sm mt-4">
+        <div class="card-header bg-success text-white">
+            <i class="fas fa-notes-medical me-2"></i> Summary Result
+        </div>
+        <div class="card-body" style="white-space: pre-line; font-family: 'Courier New', monospace; line-height: 1.6;">
+            ${result.summary}
+        </div>
+        <div class="card-footer text-end">
+            <button class="btn btn-outline-secondary btn-sm" onclick="copySummary()">
+                <i class="fas fa-copy me-1"></i> Copy to Clipboard
+            </button>
+            <!-- Future enhancement:
+            <button class="btn btn-outline-primary btn-sm ms-2">
+                <i class="fas fa-file-download me-1"></i> Download Summary
+            </button>
+            -->
+        </div>
+    </div>
+`;
+
         } catch (error) {
             console.error("Error:", error);
             resultDiv.innerHTML = `<div class="text-danger">❗ Network or server error</div>`;
         }
     });
+</script>
+
+<script>
+    function copySummary() {
+        const text = document.querySelector("#summary-result .card-body").innerText;
+        navigator.clipboard.writeText(text).then(() => {
+            alert("Summary copied to clipboard!");
+        }).catch(err => {
+            alert("Failed to copy summary.");
+            console.error(err);
+        });
+    }
 </script>
 {% endblock %}

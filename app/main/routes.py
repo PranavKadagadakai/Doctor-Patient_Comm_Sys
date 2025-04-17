@@ -114,6 +114,14 @@ def messaging_page():
 def forum_page():
     return render_template('forum.html')
 
+@main_bp.route('/contact')
+def contact_page():
+    return render_template('contact.html')
+
+@main_bp.route('/about')
+def about_page():
+    return render_template('about.html')
+
 @main_bp.route('/tracker')
 @login_required
 def tracker_page():
