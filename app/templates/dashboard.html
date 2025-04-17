@@ -1,164 +1,71 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container">
-    <h2>Hello, {{ username.capitalize() }}!</h2>
-
-    {% if role == 'doctor' %}
-    <div class="dashboard-grid">
-        <h3 class="section-title">👨‍⚕️ Doctor Dashboard</h3>
-
-        <div class="dashboard-row">
-            <div class="dashboard-card">
-                <a href="{{ url_for('main.forum_page') }}" class="dashboard-link">
-                    <div class="card-icon">🩺</div>
-                    <div class="card-text">Access Doctor Forum</div>
-                </a>
-            </div>
-
-            <div class="dashboard-card">
-                <a href="{{ url_for('main.messaging_page') }}" class="dashboard-link">
-                    <div class="card-icon">📩</div>
-                    <div class="card-text">Chat with Patients</div>
-                </a>
-            </div>
+<section class="text-gray-600 body-font bg-gray-50 py-20">
+    <div class="container px-5 mx-auto">
+      <div class="flex flex-col text-center w-full mb-16">
+        <h2 class="text-xs text-indigo-500 tracking-widest font-medium title-font mb-1">MEDICALMATE</h2>
+        <h1 class="sm:text-4xl text-3xl font-bold title-font text-gray-900 mb-4">Doctor-Patient Communication Dashboard</h1>
+        <p class="lg:w-2/3 mx-auto leading-relaxed text-base text-gray-600">Empowering seamless and intelligent healthcare communication through AI-driven tools.</p>
+      </div>
+      <div class="flex flex-wrap -m-4">
+        <!-- AI Chatbot -->
+        <div class="p-4 md:w-1/2 lg:w-1/4">
+          <div class="h-full border-2 border-gray-200 rounded-lg p-6 text-center bg-white shadow-sm hover:shadow-md transition duration-300">
+            <h2 class="text-lg font-semibold text-gray-900 mb-2">AI Chatbot</h2>
+            <p class="leading-relaxed mb-4 text-gray-600">Instant responses to patient queries powered by AI. Available 24/7.</p>
+            <a href="{{ url_for('main.chatbot_page') }}" class="text-indigo-500 inline-flex items-center cursor-pointer">Open Chat
+              <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                class="w-4 h-4 ml-2" viewBox="0 0 24 24">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
         </div>
-
-        <div class="dashboard-row">
-            <div class="dashboard-card">
-                <a href="{{ url_for('main.summarize_page') }}" class="dashboard-link">
-                    <div class="card-icon">📄</div>
-                    <div class="card-text">View Medical Summaries</div>
-                </a>
-            </div>
-
-            <div class="dashboard-card">
-                <a href="{{ url_for('main.tracker_page') }}" class="dashboard-link">
-                    <div class="card-icon">📊</div>
-                    <div class="card-text">Patient Medical Tracker</div>
-                </a>
-            </div>
+  
+        <!-- Summarizer -->
+        <div class="p-4 md:w-1/2 lg:w-1/4">
+          <div class="h-full border-2 border-gray-200 rounded-lg p-6 text-center bg-white shadow-sm hover:shadow-md transition duration-300">
+            <h2 class="text-lg font-semibold text-gray-900 mb-2">Summarizer</h2>
+            <p class="leading-relaxed mb-4 text-gray-600">Get quick summaries of medical reports, prescriptions, or chat history.</p>
+            <a href = "{{ url_for('main.summarize_page') }}" class="text-indigo-500 inline-flex items-center cursor-pointer">Summarize Now
+              <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                class="w-4 h-4 ml-2" viewBox="0 0 24 24">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
         </div>
+  
+        <!-- Text to Speech -->
+        <div class="p-4 md:w-1/2 lg:w-1/4">
+          <div class="h-full border-2 border-gray-200 rounded-lg p-6 text-center bg-white shadow-sm hover:shadow-md transition duration-300">
+            <h2 class="text-lg font-semibold text-gray-900 mb-2">Text-to-Speech</h2>
+            <p class="leading-relaxed mb-4 text-gray-600">Convert any text into clear audio. Ideal for accessibility and convenience.</p>
+            <a href = "{{ url_for('main.translate_page') }}" class="text-indigo-500 inline-flex items-center cursor-pointer">Listen Now
+              <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                class="w-4 h-4 ml-2" viewBox="0 0 24 24">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+        </div>
+  
+        <!-- Messaging -->
+        <div class="p-4 md:w-1/2 lg:w-1/4">
+          <div class="h-full border-2 border-gray-200 rounded-lg p-6 text-center bg-white shadow-sm hover:shadow-md transition duration-300">
+            <h2 class="text-lg font-semibold text-gray-900 mb-2">Secure Messaging</h2>
+            <p class="leading-relaxed mb-4 text-gray-600">Encrypted chat platform for real-time doctor-patient communication.</p>
+            <a href = "{{ url_for('main.messaging_page') }}" class="text-indigo-500 inline-flex items-center cursor-pointer">Open Messenger
+              <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                class="w-4 h-4 ml-2" viewBox="0 0 24 24">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
     </div>
-
-    {% elif role == 'patient' %}
-    <div class="dashboard-grid">
-        <h3 class="section-title">🧑‍⚕️ Patient Dashboard</h3>
-
-        <div class="dashboard-row">
-            <div class="dashboard-card">
-                <a href="{{ url_for('main.summarize_page') }}" class="dashboard-link">
-                    <div class="card-icon">📝</div>
-                    <div class="card-text">Upload & Summarize Reports</div>
-                </a>
-            </div>
-
-            <div class="dashboard-card">
-                <a href="{{ url_for('main.chatbot_page') }}" class="dashboard-link">
-                    <div class="card-icon">💬</div>
-                    <div class="card-text">Ask the AI Medical Chatbot</div>
-                </a>
-            </div>
-        </div>
-
-        <div class="dashboard-row">
-            <div class="dashboard-card">
-                <a href="{{ url_for('main.messaging_page') }}" class="dashboard-link">
-                    <div class="card-icon">📩</div>
-                    <div class="card-text">Secure Message Doctor</div>
-                </a>
-            </div>
-
-            <div class="dashboard-card">
-                <a href="{{ url_for('main.translate_page') }}" class="dashboard-link">
-                    <div class="card-icon">🌍</div>
-                    <div class="card-text">Translation & TTS</div>
-                </a>
-            </div>
-        </div>
-
-        <div class="dashboard-row">
-            <div class="dashboard-card center-card">
-                <a href="{{ url_for('main.tracker_page') }}" class="dashboard-link">
-                    <div class="card-icon">📅</div>
-                    <div class="card-text">Update Your Medical Tracker</div>
-                </a>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-</div>
-
-<style>
-    .dashboard-grid {
-        margin-top: 30px;
-    }
-
-    .section-title {
-        font-size: 24px;
-        margin-bottom: 25px;
-        color: #2e86de;
-        border-bottom: 2px solid #e1e4e8;
-        padding-bottom: 10px;
-    }
-
-    .dashboard-row {
-        display: flex;
-        margin-bottom: 20px;
-        gap: 20px;
-    }
-
-    .dashboard-card {
-        flex: 1;
-        background-color: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-        .dashboard-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-
-    .dashboard-link {
-        display: block;
-        padding: 25px 20px;
-        text-decoration: none;
-        color: #333;
-        height: 100%;
-    }
-
-    .card-icon {
-        font-size: 32px;
-        margin-bottom: 15px;
-        text-align: center;
-    }
-
-    .card-text {
-        font-size: 18px;
-        text-align: center;
-        font-weight: 500;
-    }
-
-    .center-card {
-        max-width: 48%;
-        margin: 0 auto;
-    }
-
-    /* Make sure container is wide enough */
-    .container {
-        max-width: 900px;
-    }
-
-    /* Mobile responsiveness */
-    @media (max-width: 768px) {
-        .dashboard-row {
-            flex-direction: column;
-        }
-
-        .center-card {
-            max-width: 100%;
-        }
-    }
-</style>
-{% endblock content %}
+  </section>
+  {% endblock content %}
