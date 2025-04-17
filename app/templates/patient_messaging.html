@@ -61,18 +61,23 @@
         </div>
     </div>
 
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js" 
+    integrity="sha384-mZLF4UVrpi/QTWPA7BjNPEnkIfRFn4ZEO3Qt/HFklTJBj/gBOV8G3HcKn4NfQblz" 
+    crossorigin="anonymous"></script>
+
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const userType = 'patient';
             const patientId = "{{ current_user.profile.id }}";  // Reference to Profile ID
-            const patientName = "{{ current_user.profile.name }}";  // Reference to Profile Name
+            const patientName = "{{ current_user.profile.full_name }}";  // Reference to Profile Name
             let socketio = io();
             let currentRoom = null;
             
             // Load all registered doctors
             function loadDoctorList() {
                 // In a real app, this would be an API call to get all doctors
-                fetch('/api/doctors')
+                fetch('/api/messaging/doctors')
                     .then(response => response.json())
                     .then(data => {
                         const doctorListEl = document.getElementById('doctorList');
@@ -164,7 +169,7 @@
                 `;
                 
                 // Load chat history
-                fetch(`/api/messages/${roomId}`)
+                fetch(`/api/messaging/${roomId}`)
                     .then(response => response.json())
                     .then(data => {
                         data.messages.forEach(msg => {

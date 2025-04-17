@@ -5,7 +5,7 @@ from .extensions import db, jwt, socketio, cors
 from .auth.routes import auth_bp
 from .summarization.routes import summarization_bp
 from .chatbot.routes import chatbot_bp
-from .messaging import events  # register socket events
+from .messaging.routes import messaging_bp
 from .translation_tts.routes import translate_bp
 from .forum.routes import forum_bp
 from .tracker.routes import tracker_bp
@@ -43,6 +43,7 @@ def create_app():
     app.register_blueprint(translate_bp, url_prefix='/api/translate_tts')
     app.register_blueprint(forum_bp, url_prefix='/api/forum')
     app.register_blueprint(tracker_bp, url_prefix='/api/tracker')
+    app.register_blueprint(messaging_bp, url_prefix='/api/messaging')
     app.register_blueprint(main_bp)
     app.register_blueprint(profile_bp)
 
