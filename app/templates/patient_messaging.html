@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Patient Chat</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <style>
+        .message-item {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        .message-content {
+            max-width: 75%;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: #f1f1f1;
+        }
+        .message-item.doctor .message-content {
+            background-color: #e3f2fd;
+        }
+        .message-item.patient {
+            justify-content: flex-end;
+        }
+        .message-item.patient .message-content {
+            background-color: #e8f5e9;
+        }
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+        .system-message {
+            text-align: center;
+            margin: 10px 0;
+            color: #6c757d;
+        }
+        .doctor-list {
+            max-height: 450px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4 mb-4">
+        <div class="row">
+            <!-- Left Sidebar: Doctor List -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h4 class="mb-0">Available Doctors</h4>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="doctor-list" id="doctorList">
+                            <!-- Doctors will be loaded here -->
+                            <div class="p-3">Loading doctors...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Chat Area -->
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h4 class="mb-0">Chat with <span id="currentDoctorName">Doctor</span></h4>
+                    </div>
+
+                    <!-- Initial state when no doctor is selected -->
+                    <div id="noChatSelected" class="card-body text-center py-5">
+                        <div class="py-5">
+                            <i class="fas fa-user-md fa-4x text-muted mb-3"></i>
+                            <h4>Select a doctor to start chatting</h4>
+                            <p class="text-muted">Choose a doctor from the list on the left</p>
+                        </div>
+                    </div>
+
+                    <!-- Chat interface (initially hidden) -->
+                    <div id="chatInterface" style="display: none;">
+                        <div class="card-body p-0">
+                            <!-- Chat Messages -->
+                            <div class="chat-container">
+                                <div class="chat-messages p-3" id="messageContainer" style="height: 400px; overflow-y: auto;">
+                                    <div class="system-message text-center mb-3">
+                                        <small class="text-muted">--- Conversation Start ---</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Message Input -->
+                            <div class="message-input-container p-3 border-top">
+                                <form id="messageForm">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="messageInput" placeholder="Type your message..." required>
+                                        <button class="btn btn-success" type="submit">Send</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userType = 'patient';
+            const patientId = "{{ current_user.id }}";
+            const patientName = "{{ current_user.username }}";
+            let socketio = io();
+            let currentRoom = null;
+            
+            // Load all registered doctors
+            function loadDoctorList() {
+                // In a real app, this would be an API call to get all doctors
+                fetch('/api/doctors')
+                    .then(response => response.json())
+                    .then(data => {
+                        const doctorListEl = document.getElementById('doctorList');
+                        doctorListEl.innerHTML = '';
+                        
+                        if (data.doctors.length === 0) {
+                            doctorListEl.innerHTML = `
+                                <div class="p-3 text-center text-muted">
+                                    <p>No doctors available</p>
+                                </div>
+                            `;
+                            return;
+                        }
+                        
+                        data.doctors.forEach(doctor => {
+                            const listItem = document.createElement('div');
+                            listItem.className = 'list-group-item list-group-item-action';
+                            listItem.innerHTML = `
+                                <div class="d-flex align-items-center py-2">
+                                    <div class="flex-grow-1">
+                                        <strong>${doctor.name}</strong>
+                                    </div>
+                                </div>
+                            `;
+                            
+                            listItem.addEventListener('click', () => {
+                                joinChatRoom(`chat_${doctor.id}_${patientId}`, doctor.name);
+                            });
+                            
+                            doctorListEl.appendChild(listItem);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error loading doctors:', error);
+                        // For demo purposes, show some sample doctors
+                        const doctorListEl = document.getElementById('doctorList');
+                        doctorListEl.innerHTML = `
+                            <div class="list-group-item list-group-item-action" onclick="joinChatRoom('chat_1_${patientId}', 'Dr. Johnson')">
+                                <div class="d-flex align-items-center py-2">
+                                    <div class="flex-grow-1">
+                                        <strong>Dr. Johnson</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="list-group-item list-group-item-action" onclick="joinChatRoom('chat_2_${patientId}', 'Dr. Smith')">
+                                <div class="d-flex align-items-center py-2">
+                                    <div class="flex-grow-1">
+                                        <strong>Dr. Smith</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="list-group-item list-group-item-action" onclick="joinChatRoom('chat_3_${patientId}', 'Dr. Brown')">
+                                <div class="d-flex align-items-center py-2">
+                                    <div class="flex-grow-1">
+                                        <strong>Dr. Brown</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+            }
+            
+            // Join a chat room with a specific doctor
+            function joinChatRoom(roomId, doctorName) {
+                // Leave current room if in one
+                if (currentRoom) {
+                    socketio.emit('leave', { room: currentRoom });
+                }
+                
+                // Join new room
+                currentRoom = roomId;
+                socketio.emit('join', {
+                    room: currentRoom,
+                    name: patientName,
+                    userType: userType
+                });
+                
+                // Update UI
+                document.getElementById('currentDoctorName').textContent = doctorName;
+                document.getElementById('noChatSelected').style.display = 'none';
+                document.getElementById('chatInterface').style.display = 'block';
+                
+                // Clear message container
+                const messageContainer = document.getElementById('messageContainer');
+                messageContainer.innerHTML = `
+                    <div class="system-message text-center mb-3">
+                        <small class="text-muted">--- Conversation with ${doctorName} ---</small>
+                    </div>
+                `;
+                
+                // Load chat history
+                fetch(`/api/messages/${roomId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.messages.forEach(msg => {
+                            addMessage(
+                                msg.text,
+                                msg.userType,
+                                msg.userType === 'patient' ? 'You' : doctorName
+                            );
+                        });
+                        
+                        scrollToBottom();
+                    })
+                    .catch(error => {
+                        console.error('Error loading messages:', error);
+                    });
+            }
+            
+            // Helper to handle socket.io connection
+            window.joinChatRoom = joinChatRoom;
+            
+            // Send a message
+            function sendMessage(e) {
+                e.preventDefault();
+                
+                const messageInput = document.getElementById('messageInput');
+                const text = messageInput.value.trim();
+                
+                if (text !== '' && currentRoom) {
+                    socketio.emit('message', {
+                        room: currentRoom,
+                        data: text,
+                        userType: userType,
+                        name: patientName
+                    });
+                    
+                    // Also emit a specific event to notify doctors
+                    socketio.emit('patient_message', {
+                        room: currentRoom,
+                        data: text,
+                        userType: userType,
+                        name: patientName
+                    });
+                    
+                    // Add own message to UI
+                    addMessage(text, 'patient', 'You');
+                    
+                    messageInput.value = '';
+                    scrollToBottom();
+                }
+            }
+            
+            // Socket event listeners
+            socketio.on('message', function(data) {
+                if (data.room === currentRoom) {
+                    const sender = data.userType === 'doctor' ? 'doctor' : 'patient';
+                    const senderName = data.userType === 'patient' ? 'You' : data.name;
+                    
+                    addMessage(data.message || data.data, sender, senderName);
+                    scrollToBottom();
+                }
+            });
+            
+            // Helper functions
+            function addMessage(text, sender, name) {
+                const messageContainer = document.getElementById('messageContainer');
+                const now = new Date();
+                const time = now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
+                
+                const div = document.createElement('div');
+                div.className = `message-item ${sender} mb-3`;
+                div.innerHTML = `
+                    <div class="message-content">
+                        <div class="message-header">
+                            <strong>${name}</strong>
+                            <small class="text-muted">${time}</small>
+                        </div>
+                        <p class="mb-0">${text}</p>
+                    </div>
+                `;
+                
+                messageContainer.appendChild(div);
+            }
+            
+            function scrollToBottom() {
+                const messageContainer = document.getElementById('messageContainer');
+                messageContainer.scrollTop = messageContainer.scrollHeight;
+            }
+            
+            // Event listeners
+            document.getElementById('messageForm').addEventListener('submit', sendMessage);
+            
+            // Initialize
+            loadDoctorList();
+        });
+    </script>
+</body>
+</html>
