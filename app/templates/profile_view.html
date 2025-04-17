@@ -1,23 +1,35 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container">
-    <h2>Profile</h2>
-    {% if user.is_authenticated %}
-        <ul>
-            <li>Username: {{ user.username }}</li>
-            <li>Email: {{ user.email }}</li>
-            <li>Full Name: {{ profile.full_name or "N/A" }}</li>
-            <li>Age: {{ profile.age or "N/A" }}</li>
-            <li>Role: {{ profile.role or "N/A" }}</li>
-            <li>Phone: {{ profile.phone or "N/A" }}</li>
-            <li>Address: {{ profile.address or "N/A" }}</li>
-            {% if profile.role == 'student' %}
-                <li>USN: {{ profile.usn or "N/A" }}</li>
-            {% endif %}
-        </ul>
-        <a href="{{ url_for('profile.edit_profile') }}" class="btn btn-primary">Edit Profile</a>
-    {% else %}
-        <p>Please <a href="{{ url_for('main.login_page') }}">log in</a> to view your profile.</p>
-    {% endif %}
+<div class="flex justify-center items-center min-h-screen bg-gray-100 px-4">
+    <div class="w-full max-w-2xl bg-white shadow-xl rounded-2xl p-8">
+        <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Profile</h2>
+        
+        {% if user.is_authenticated %}
+            <ul class="space-y-4 text-lg text-gray-700">
+                <li><span class="font-semibold">Username:</span> {{ user.username }}</li>
+                <li><span class="font-semibold">Email:</span> {{ user.email }}</li>
+                <li><span class="font-semibold">Full Name:</span> {{ profile.full_name or "N/A" }}</li>
+                <li><span class="font-semibold">Age:</span> {{ profile.age or "N/A" }}</li>
+                <li><span class="font-semibold">Role:</span> {{ profile.role or "N/A" }}</li>
+                <li><span class="font-semibold">Phone:</span> {{ profile.phone or "N/A" }}</li>
+                <li><span class="font-semibold">Address:</span> {{ profile.address or "N/A" }}</li>
+                {% if profile.role == 'student' %}
+                    <li><span class="font-semibold">USN:</span> {{ profile.usn or "N/A" }}</li>
+                {% endif %}
+            </ul>
+
+            <!-- Edit Profile Button -->
+            <div class="mt-8 flex justify-center">
+                <a href="{{ url_for('profile.edit_profile') }}" 
+                   class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg transition duration-200 shadow-md">
+                   Edit Profile
+                </a>
+            </div>
+        {% else %}
+            <p class="text-center text-gray-600 text-lg">
+                Please <a href="{{ url_for('main.login_page') }}" class="text-blue-500 underline hover:text-blue-600">log in</a> to view your profile.
+            </p>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}

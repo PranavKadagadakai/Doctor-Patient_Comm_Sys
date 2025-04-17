@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4 mb-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card">
+                <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                    <h2 class="mb-0">🗂️ Full Medical History</h2>
+                    <a href="{{ url_for('tracker.tracker_page') }}" class="btn btn-sm btn-outline-light">
+                        <i class="fas fa-arrow-left me-1"></i>Back to Tracker
+                    </a>
+                </div>
+                <div class="card-body">
+                    {% if entries %}
+                        <div class="list-group">
+                            {% for entry in entries %}
+                                <div class="list-group-item py-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="badge bg-primary text-capitalize">{{ entry.entry_type }}</span>
+                                        <small class="text-muted">{{ entry.date.strftime('%B %d, %Y') }}</small>
+                                    </div>
+                                    <p class="mt-2 mb-0">{{ entry.description }}</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center text-muted py-5">
+                            <i class="fas fa-folder-open fa-3x mb-3"></i>
+                            <p>No history entries found.</p>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="card-footer text-muted text-end">
+                    <small>Showing all medical entries recorded by the patient.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,12 +1,12 @@
-from flask_jwt_extended import get_jwt_identity
+# decorators.py
 from functools import wraps
-from flask import jsonify
+from flask import redirect, url_for, abort
+from flask_login import current_user
 
 def patient_only(fn):
     @wraps(fn)
     def wrapper(*args, **kwargs):
-        identity = get_jwt_identity()
-        if identity.get('role') != 'patient':
-            return jsonify({"error": "Patients only"}), 403
+        if not current_user.is_authenticated or current_user.profile.role != 'patient':
+            return abort(403)
         return fn(*args, **kwargs)
     return wrapper

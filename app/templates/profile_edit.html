@@ -1,32 +1,64 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container mx-auto max-w-xl mt-10 bg-white shadow-lg rounded-2xl p-8">
-    <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Edit Profile</h2>
-    <form method="POST" class="space-y-4">
-        {{ form.hidden_tag() }}
-        <div>
-            <label class="block text-gray-700 font-medium mb-1">{{ form.full_name.label }}</label>
-            {{ form.full_name(class_="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400", size=32) }}
-        </div>
-        <div>
-            <label class="block text-gray-700 font-medium mb-1">{{ form.role.label }}</label>
-            {{ form.role(class_="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400", size=32) }}
-        </div>
-        <div>
-            <label class="block text-gray-700 font-medium mb-1">{{ form.age.label }}</label>
-            {{ form.age(class_="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400") }}
-        </div>
-        <div>
-            <label class="block text-gray-700 font-medium mb-1">{{ form.phone.label }}</label>
-            {{ form.phone(class_="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400", size=32) }}
-        </div>
-        <div>
-            <label class="block text-gray-700 font-medium mb-1">{{ form.address.label }}</label>
-            {{ form.address(class_="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400", size=32) }}
-        </div>
-        <button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg mt-4 transition duration-200">
-            Save
-        </button>
-    </form>
+<div class="flex justify-center items-center min-h-screen bg-gray-100">
+    <div class="w-full max-w-2xl bg-white shadow-xl rounded-2xl p-10">
+        <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">Edit Profile</h2>
+        
+        <form method="POST" class="space-y-6">
+            {{ form.hidden_tag() }}
+
+            <!-- Full Name -->
+            <div class="flex flex-col">
+                <label class="text-gray-700 font-medium mb-1">{{ form.full_name.label }}</label>
+                {{ form.full_name(class_="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400") }}
+                {% if form.full_name.errors %}
+                    <span class="text-red-500 text-sm mt-1">{{ form.full_name.errors[0] }}</span>
+                {% endif %}
+            </div>
+
+            <!-- Role -->
+            <div class="flex flex-col">
+                <label class="text-gray-700 font-medium mb-1">{{ form.role.label }}</label>
+                {{ form.role(class_="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400") }}
+                {% if form.role.errors %}
+                    <span class="text-red-500 text-sm mt-1">{{ form.role.errors[0] }}</span>
+                {% endif %}
+            </div>
+
+            <!-- Age -->
+            <div class="flex flex-col">
+                <label class="text-gray-700 font-medium mb-1">{{ form.age.label }}</label>
+                {{ form.age(class_="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400") }}
+                {% if form.age.errors %}
+                    <span class="text-red-500 text-sm mt-1">{{ form.age.errors[0] }}</span>
+                {% endif %}
+            </div>
+
+            <!-- Phone -->
+            <div class="flex flex-col">
+                <label class="text-gray-700 font-medium mb-1">{{ form.phone.label }}</label>
+                {{ form.phone(class_="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400") }}
+                {% if form.phone.errors %}
+                    <span class="text-red-500 text-sm mt-1">{{ form.phone.errors[0] }}</span>
+                {% endif %}
+            </div>
+
+            <!-- Address -->
+            <div class="flex flex-col">
+                <label class="text-gray-700 font-medium mb-1">{{ form.address.label }}</label>
+                {{ form.address(class_="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400") }}
+                {% if form.address.errors %}
+                    <span class="text-red-500 text-sm mt-1">{{ form.address.errors[0] }}</span>
+                {% endif %}
+            </div>
+
+            <!-- Submit -->
+            <div>
+                <button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-4 rounded-lg transition duration-200">
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
 {% endblock %}
