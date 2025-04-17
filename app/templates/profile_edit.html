@@ -1,15 +1,32 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container">
-    <h2>Edit Profile</h2>
-    <form method="POST">
+<div class="container mx-auto max-w-xl mt-10 bg-white shadow-lg rounded-2xl p-8">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Edit Profile</h2>
+    <form method="POST" class="space-y-4">
         {{ form.hidden_tag() }}
-        {{ form.full_name.label }} {{ form.full_name(size=32) }}<br>
-        {{ form.role.label }} {{ form.role(size=32) }}<br>
-        {{ form.age.label }} {{ form.age }}<br>
-        {{ form.phone.label }} {{ form.phone(size=32) }}<br>
-        {{ form.address.label }} {{ form.address(size=32) }}<br>
-        <button type="submit" class="btn btn-success mt-2">Save</button>
+        <div>
+            <label class="block text-gray-700 font-medium mb-1">{{ form.full_name.label }}</label>
+            {{ form.full_name(class_="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400", size=32) }}
+        </div>
+        <div>
+            <label class="block text-gray-700 font-medium mb-1">{{ form.role.label }}</label>
+            {{ form.role(class_="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400", size=32) }}
+        </div>
+        <div>
+            <label class="block text-gray-700 font-medium mb-1">{{ form.age.label }}</label>
+            {{ form.age(class_="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400") }}
+        </div>
+        <div>
+            <label class="block text-gray-700 font-medium mb-1">{{ form.phone.label }}</label>
+            {{ form.phone(class_="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400", size=32) }}
+        </div>
+        <div>
+            <label class="block text-gray-700 font-medium mb-1">{{ form.address.label }}</label>
+            {{ form.address(class_="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400", size=32) }}
+        </div>
+        <button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg mt-4 transition duration-200">
+            Save
+        </button>
     </form>
 </div>
 {% endblock %}

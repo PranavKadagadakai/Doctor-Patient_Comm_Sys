@@ -15,6 +15,9 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+    
     <title>MediMate | {% block title %}{% endblock %}</title>
   </head>
   <body>
@@ -35,12 +38,10 @@
           {% if current_user.is_authenticated %}
             <a href="{{ url_for('main.dashboard_page') }}" class="hover:text-indigo-600">Home</a>
             <a href="{{ url_for('profile.view_profile') }}" class="hover:text-indigo-600">Profile</a>
-            <a href="{{ url_for('main.about_page') }}" class="hover:text-indigo-600">About Us</a>
             <a href="{{ url_for('main.contact_page') }}" class="hover:text-indigo-600">Contact Us</a>
             <a href="{{ url_for('main.logout') }}" class="hover:text-indigo-600">Logout</a>
           {% else %}
             <a href="{{ url_for('main.home') }}" class="hover:text-indigo-600">Home</a>
-            <a href="{{ url_for('main.about_page') }}" class="hover:text-indigo-600">About Us</a>
             <a href="{{ url_for('main.contact_page') }}" class="hover:text-indigo-600">Contact Us</a>
             <a href="{{ url_for('main.login_page') }}" class="hover:text-indigo-600">Log In</a>
             <a href="{{ url_for('main.register_page') }}" class="hover:text-indigo-600">Register</a>
