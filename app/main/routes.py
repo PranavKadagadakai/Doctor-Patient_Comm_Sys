@@ -105,9 +105,20 @@ def translate_page():
     return render_template('translate.html', token=session.get('token'))
 
 @main_bp.route('/messaging')
-@login_required
+@login_required  # Changed from login_required_ui to login_required
 def messaging_page():
-    return render_template('messaging.html')
+    user = current_user
+    profile = Profile.query.filter_by(user_id=user.id).first()  # ✅ Add .first()
+
+    role = profile.role if profile else "Unknown"
+    
+    # Check the role and render the appropriate template
+    if role == 'doctor':
+        return render_template('doctor_messaging.html', token=session.get('token'))
+    elif role == 'patient':
+        return render_template('patient_messaging.html', token=session.get('token'))
+    else :
+        return render_template('patient_messaging.html', token=session.get('token'))
 
 @main_bp.route('/forum')
 @login_required
