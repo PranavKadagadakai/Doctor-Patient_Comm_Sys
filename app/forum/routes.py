@@ -1,24 +1,29 @@
-from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask import Blueprint, request, jsonify, abort, render_template, redirect, url_for
+from flask_login import current_user, login_required
 from .models import ForumPost, ForumComment
+from app.extensions import db
 from .decorators import doctor_only
-from ..extensions import db
 
 forum_bp = Blueprint('forum', __name__)
 
 @forum_bp.route('/posts', methods=['POST'])
-@jwt_required()
+@login_required
 @doctor_only
 def create_post():
-    data = request.get_json()
-    user = get_jwt_identity()
-    post = ForumPost(title=data['title'], content=data['content'], author_id=user['id'])
+    data = request.form  # for HTML form posts (not JSON)
+    title = data.get('title')
+    content = data.get('content')
+
+    if not title or not content:
+        return jsonify({"error": "Title and content required"}), 400
+
+    post = ForumPost(title=title, content=content, author_id=current_user.id)
     db.session.add(post)
     db.session.commit()
-    return jsonify({"msg": "Post created", "post_id": post.id}), 201
+
+    return redirect(url_for('forum.forum_page'))
 
 @forum_bp.route('/posts', methods=['GET'])
-@jwt_required()
 def list_posts():
     posts = ForumPost.query.order_by(ForumPost.created_at.desc()).all()
     return jsonify([{
@@ -30,7 +35,6 @@ def list_posts():
     } for p in posts])
 
 @forum_bp.route('/posts/<int:post_id>', methods=['GET'])
-@jwt_required()
 def get_post(post_id):
     post = ForumPost.query.get_or_404(post_id)
     return jsonify({
@@ -48,12 +52,23 @@ def get_post(post_id):
     })
 
 @forum_bp.route('/posts/<int:post_id>/comments', methods=['POST'])
-@jwt_required()
+@login_required
 @doctor_only
 def add_comment(post_id):
-    data = request.get_json()
-    user = get_jwt_identity()
-    comment = ForumComment(post_id=post_id, content=data['content'], author_id=user['id'])
+    data = request.form
+    content = data.get('content')
+
+    if not content:
+        return jsonify({"error": "Comment content required"}), 400
+
+    comment = ForumComment(post_id=post_id, content=content, author_id=current_user.id)
     db.session.add(comment)
     db.session.commit()
+
     return jsonify({"msg": "Comment added", "comment_id": comment.id}), 201
+
+@forum_bp.route('/forum', methods=['GET'])
+@login_required
+def forum_page():
+    posts = ForumPost.query.order_by(ForumPost.created_at.desc()).all()
+    return render_template('forum.html', posts=posts)

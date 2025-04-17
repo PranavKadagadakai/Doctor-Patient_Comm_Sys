@@ -1,9 +1,23 @@
 {% extends "base.html" %}
+
 {% block content %}
 <div class="container my-5">
+
+    <!-- Flash Messages -->
+    <!--{% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}-->
+
     <div class="row">
         <div class="col-lg-8 mx-auto">
-            <div class="card shadow">
+            <div class="card shadow mb-4">
                 <div class="card-header bg-primary text-white">
                     <h2 class="mb-0"><i class="fas fa-stethoscope me-2"></i>Doctor Discussion Forum</h2>
                 </div>
@@ -11,7 +25,8 @@
                     <form action="/api/forum/posts" method="POST" id="post-form">
                         <div class="mb-3">
                             <label for="post-title" class="form-label fw-bold">Post Title:</label>
-                            <input type="text" class="form-control" id="post-title" name="title" placeholder="Enter a descriptive title" required>
+                            <input type="text" class="form-control" id="post-title" name="title"
+                                   placeholder="Enter a descriptive title" required>
                         </div>
 
                         <div class="mb-3">
@@ -27,13 +42,15 @@
 
                         <div class="mb-3">
                             <label for="post-content" class="form-label fw-bold">Content:</label>
-                            <textarea class="form-control" id="post-content" name="content" rows="6" placeholder="Share your question, insights or case details..." required></textarea>
+                            <textarea class="form-control" id="post-content" name="content" rows="6"
+                                      placeholder="Share your question, insights or case details..." required></textarea>
                             <div class="form-text">Please avoid sharing protected patient information.</div>
                         </div>
 
                         <div class="mb-3">
                             <label for="post-tags" class="form-label fw-bold">Tags:</label>
-                            <input type="text" class="form-control" id="post-tags" name="tags" placeholder="Separate tags with commas (e.g., cardiology, treatment, advice)">
+                            <input type="text" class="form-control" id="post-tags" name="tags"
+                                   placeholder="Separate tags with commas (e.g., cardiology, treatment, advice)">
                         </div>
 
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
@@ -45,8 +62,30 @@
                     </form>
                 </div>
                 <div class="card-footer text-muted">
-                    <small>Posts are reviewed by moderators. Please follow our <a href="/community-guidelines">community guidelines</a>.</small>
+                    <small>Posts are reviewed by moderators. Please follow our
+                        <a href="/community-guidelines">community guidelines</a>.
+                    </small>
                 </div>
+            </div>
+
+            <!-- Forum Posts -->
+            <div class="forum-posts">
+                <h3 class="mb-4 text-secondary">Recent Discussions</h3>
+
+                {% for post in posts %}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <strong>{{ post.title }}</strong>
+                        <small class="text-muted float-end">{{ post.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                    </div>
+                    <div class="card-body">
+                        <p>{{ post.content }}</p>
+                        <p class="text-muted mb-0">Posted by Doctor ID: {{ post.author_id }}</p>
+                    </div>
+                </div>
+                {% else %}
+                <p class="text-muted">No posts yet. Be the first to start a discussion.</p>
+                {% endfor %}
             </div>
         </div>
     </div>

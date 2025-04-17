@@ -1,12 +1,11 @@
-from flask_jwt_extended import get_jwt_identity
+from flask_login import current_user
 from functools import wraps
-from flask import jsonify
+from flask import abort
 
 def doctor_only(fn):
     @wraps(fn)
     def wrapper(*args, **kwargs):
-        identity = get_jwt_identity()
-        if identity.get('role') != 'doctor':
-            return jsonify({"error": "Doctor access only"}), 403
+        if not current_user.is_authenticated or current_user.profile.role != 'doctor':
+            return abort(403)
         return fn(*args, **kwargs)
     return wrapper
