@@ -1,23 +1,21 @@
 import os
 from dotenv import load_dotenv
-from google import genai
-from google.genai import types
+import google.generativeai as genai
 import markdown
+
 
 class ChatBot:
     def __init__(self):
-        load_dotenv()
+        load_dotenv()  # Load environment variables from .env file
+        # Configure with API key
+        genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
         
-        # Initialize the client
-        self.genai_client = genai.Client(
-            api_key=os.environ.get("GEMINI_API_KEY"),
-        )
-        
-        self.MODEL_NAME = "gemini-2.0-flash"
+        self.MODEL_NAME = "gemini-1.5-flash"
+
+        self.model = genai.GenerativeModel(self.MODEL_NAME)
         
         # Define system instruction
-        self.system_instruction = [
-            types.Part.from_text(text="""You are \"MedBot\", a helpful, empathetic, and privacy-conscious AI medical assistant designed for a centralized AI-powered healthcare communication platform. Your primary goal is to assist patients in understanding their medical concerns, while always respecting boundaries and promoting professional care.
+        self.system_instruction = """You are \"MedBot\", a helpful, empathetic, and privacy-conscious AI medical assistant designed for a centralized AI-powered healthcare communication platform. Your primary goal is to assist patients in understanding their medical concerns, while always respecting boundaries and promoting professional care.
 
 ✅ Respond in clear, friendly, and conversational language suitable for a website chatbot.
 ✅ Help users understand medical terms, test results, symptoms, and doctor instructions in simple, non-technical language.
@@ -28,28 +26,15 @@ class ChatBot:
 ✅ If the question is beyond your scope or may lead to harm if misinterpreted, kindly advise the user to consult a medical professional.
 ✅ Maintain user trust, avoid alarming tones, and be supportive throughout the conversation.
 
-🔒 Always prioritize privacy. Never store or reuse user data.""")
-        ]
+🔒 Always prioritize privacy. Never store or reuse user data."""
         
         # Define safety settings
-        self.safety_settings = [
-            types.SafetySetting(
-                category="HARM_CATEGORY_HARASSMENT",
-                threshold="BLOCK_LOW_AND_ABOVE",  # Block most
-            ),
-            types.SafetySetting(
-                category="HARM_CATEGORY_HATE_SPEECH",
-                threshold="BLOCK_MEDIUM_AND_ABOVE",  # Block some
-            ),
-            types.SafetySetting(
-                category="HARM_CATEGORY_SEXUALLY_EXPLICIT",
-                threshold="BLOCK_MEDIUM_AND_ABOVE",  # Block some
-            ),
-            types.SafetySetting(
-                category="HARM_CATEGORY_DANGEROUS_CONTENT",
-                threshold="BLOCK_LOW_AND_ABOVE",  # Block most
-            ),
-        ]
+        self.safety_settings = {
+            "HARM_CATEGORY_HARASSMENT": "BLOCK_LOW_AND_ABOVE",  # Block most
+            "HARM_CATEGORY_HATE_SPEECH": "BLOCK_MEDIUM_AND_ABOVE",  # Block some
+            "HARM_CATEGORY_SEXUALLY_EXPLICIT": "BLOCK_MEDIUM_AND_ABOVE",  # Block some
+            "HARM_CATEGORY_DANGEROUS_CONTENT": "BLOCK_LOW_AND_ABOVE",  # Block most
+            }
 
     def get_response(self, user_input):
         try:
@@ -58,33 +43,13 @@ class ChatBot:
             if not isinstance(user_input, str):
                 user_input = str(user_input)
                 
-            # Create content with user input
-            contents = [
-                types.Content(
-                    role="user",
-                    parts=[types.Part.from_text(text=user_input)],
-                )
-            ]
-            
-            # Set up generation config
-            generate_content_config = types.GenerateContentConfig(
+            response = self.model.generate_content(
+                [self.system_instruction, user_input],
                 safety_settings=self.safety_settings,
-                response_mime_type="text/plain",
-                system_instruction=self.system_instruction,
+                generation_config={"temperature": 0.7},
+                stream=False,
             )
-            
-            # Generate response with streaming
-            output = ""
-            for chunk in self.genai_client.models.generate_content_stream(
-                model=self.MODEL_NAME,
-                contents=contents,
-                config=generate_content_config,
-            ):
-                if chunk.text:
-                    output += chunk.text
-            
-            output = markdown.markdown(output)
-            return output
+            return markdown.markdown(response.text)
         except Exception as e:
             return f"Error: {str(e)}"
 
